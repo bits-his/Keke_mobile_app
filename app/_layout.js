@@ -5,11 +5,11 @@ export default function RootLayout() {
     <Stack>
       <Stack.Screen
         name="index"
-        options={{ title: "Welcome", headerShown: true }} 
+        options={{ title: "Welcome", headerShown: false }} 
       />
       <Stack.Screen
         name="dashBoard"
-        options={{ title: "Dashboard", headerShown: true }}
+        options={{ title: "Dashboard", headerShown: false }}
       />
     </Stack>
   );

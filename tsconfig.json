@@ -15,6 +15,11 @@
     "app/GeneralStyles",
     "app/index.js",
     "app/_layout.js",
+<<<<<<< HEAD
     "app/main-body/DashBoard.js"
+=======
+    "app/mainBody/LogIn.js",
+    "app/dashBoard.js"
+>>>>>>> 80f475e550a05a3ccd35c8fe3d2295b34b4a0bff
   ]
 }
