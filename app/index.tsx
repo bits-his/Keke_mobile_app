@@ -39,7 +39,7 @@ export default function signIn() {
           </Text>
         </View>
         <View>
-          <Text>UserName</Text>
+          <Text>UserName</Text> 
           <TextInput
             style={styles.input}
             placeholder="Email"
