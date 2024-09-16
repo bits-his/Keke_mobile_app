@@ -35,30 +35,34 @@ export default function DashBoard() {
                 {/* </Link> */}
             </View>
             <View style={{ flexDirection: 'row', width: '100%' }}>
-                {/* <Link as={TouchableOpacity} style={{ width: '50%' }} href={"/dashBoard"}> */}
                 <View style={styles.cards}>
-                    <MaterialIcons
-                        style={styles.icon}
-                        name="qr-code-scanner"
-                        size={70}
-                        color="#f5c005"
-                    />
-                    <Text style={styles.CardText}>Scan QR Code</Text>
+                    <Link as={TouchableOpacity} href={"/QrScan"}>
+                        <MaterialIcons
+                            style={styles.icon}
+                            name="qr-code-scanner"
+                            size={70}
+                            color="#f5c005"
+                        />
+                    </Link>
+                    <Link as={TouchableOpacity} href={"/QrScan"}>
+                        <Text style={styles.CardText}>Scan QR Code</Text>
+                    </Link>
                 </View>
-                {/* </Link> */}
                 <View style={styles.cards}>
-                    {/* <Link as={TouchableOpacity} style={{ width: '50%' }} href={"/dashBoard"}> */}
-                    <MaterialIcons
-                        style={styles.icon}
-                        name="add-circle-outline"
-                        size={70}
-                        color="#f5c005"
-                    />
-                    <Text style={styles.CardText}>Top Up</Text>
+                    <Link as={TouchableOpacity} href={"/Topup"}>
+                        <MaterialIcons
+                            style={styles.icon}
+                            name="add-circle-outline"
+                            size={70}
+                            color="#f5c005"
+                        />
+                    </Link>
+                    <Link as={TouchableOpacity} href={"/Topup"}>
+                        <Text style={styles.CardText}>Top Up</Text>
+                    </Link>
                 </View>
-                {/* // </Link> */}
             </View>
-        </View>
+        </View >
     )
 }
 
