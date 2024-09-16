@@ -68,7 +68,7 @@ export default function SignIn() {
             </View>
           </View>
         </View>
-        <Link as={TouchableOpacity} style={styles.button} href={"/QrScan"}>Submit</Link>
+        <Link as={TouchableOpacity} style={styles.button} href={"/Topup"}>Submit</Link>
 
       </View>
     </View>
