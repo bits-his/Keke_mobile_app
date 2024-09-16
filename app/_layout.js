@@ -5,7 +5,7 @@ export default function RootLayout() {
     <Stack>
       <Stack.Screen
         name="index"
-        options={{ title: "Welcome", headerShown: true }} 
+        options={{ title: "Welcome", headerShown: true }}
       />
       <Stack.Screen
         name="dashBoard"
@@ -14,3 +14,4 @@ export default function RootLayout() {
     </Stack>
   );
 }
+//eee
