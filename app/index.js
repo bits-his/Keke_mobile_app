@@ -6,6 +6,7 @@ import {
 } from "react-native";
 import SignIn from "./mainBody/LogIn";
 
+
 export default function index() {
   const navigation = useNavigation();
   const [form, setForm] = useState({
@@ -22,9 +23,13 @@ export default function index() {
   };
 
   return (
+
+
     <View style={styles.container}>
       <SignIn />
     </View>
+
+
   );
 }
 

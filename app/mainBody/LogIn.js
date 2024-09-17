@@ -1,7 +1,8 @@
 import { Link, useNavigation } from "expo-router";
-import React, { useState, useEffect } from "react";
-import logo from "../../assets/images/keke_napep.png"
+import React, { useState, useEffect, useContext } from "react";
+import logo from "../../assets/images/keke_napep.png";
 import {
+  Button,
   Image,
   StyleSheet,
   Text,
@@ -10,15 +11,44 @@ import {
   View,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { _post, toParagraph } from "../Helper";
+import { AuthContext } from "../context/Context";
 
 export default function SignIn() {
   const navigation = useNavigation();
   const [form, setForm] = useState({
-    email: "",
+    username: "",
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
-
+  const [error, setError] = useState({});
+  const { user, setUser, token, setToken } = useContext(AuthContext);
+  const handleLogin = () => {
+    console.log(form);
+    fetch(`http://localhost:44405/users/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(form),
+    })
+      .then((raw) => raw.json())
+      .then((data) => {
+        // console.log(data)
+        if (data.success) {
+          setUser(data.user);
+          setToken(data.token);
+          console.log(data);
+          navigation.navigate("dashboard");
+        } else {
+          console.log(data);
+          setError(data);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
   const handleChange = (name, value) => {
     setForm({
       ...form,
@@ -29,11 +59,9 @@ export default function SignIn() {
   return (
     <View style={styles.container}>
       <View style={styles.signInCard}>
+        <Text>{user?.username}</Text>
         <View style={styles.headerContainer}>
-          <Image
-            source={logo}
-            style={styles.profile}
-          />
+          <Image source={logo} style={styles.profile} />
           <Text style={styles.headerText}>
             Welcome to <Text style={styles.boldText}>Keke Mobile App</Text>{" "}
             Please Log in
@@ -45,8 +73,8 @@ export default function SignIn() {
             style={styles.input}
             placeholder="Email"
             keyboardType="email-address"
-            value={form.email}
-            onChangeText={(text) => handleChange("email", text)}
+            value={form.username}
+            onChangeText={(text) => handleChange("username", text)}
           />
         </View>
         <View style={styles.inputContainer}>
@@ -73,7 +101,12 @@ export default function SignIn() {
             </View>
           </View>
         </View>
-        <Link as={TouchableOpacity} style={styles.button} href={"/dashboard"}>Submit</Link>
+        {/* <Text style={styles.error}>{toParagraph(Object.keys(error)[0])}</Text> */}
+        <Text style={styles.error}>{Object.values(error)[0]}</Text>
+        <Button style={styles.button} title="Submit" onPress={handleLogin} />
+        {/* <Link as={TouchableOpacity} style={styles.button} href={"/dashboard"}>
+          Submit
+        </Link> */}
       </View>
     </View>
   );
@@ -141,18 +174,24 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     width: "100%",
     alignItems: "center",
-    color: 'white',
-    textAlign: 'center',
+    color: "white",
+    textAlign: "center",
     fontSize: 18,
-    marginBottom: 20
+    marginBottom: 20,
   },
   inputData: {
     borderWidth: 1,
-    borderColor: '#f5c005',
+    borderColor: "#f5c005",
     borderRadius: 5,
     marginTop: 7,
   },
   profile: {
-    // width: 
-  }
+    // width:
+  },
+  error: {
+    color: "red",
+    marginRight: "auto",
+    width: "100%",
+    textAlign: "center",
+  },
 });

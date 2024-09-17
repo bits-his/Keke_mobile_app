@@ -6,9 +6,15 @@
  export const server_url = "http://localhost:44405";
 // export const server_url = "http://192.168.43.123:44405";
 // export const server_url = "https://galaxybis.ebudgetkano.ng/keke-api";
+import { useContext } from "react";
+import { AuthContext } from "./context/Context";
+
+
 
 export const _post = (url, data, success = (f) => f, error = (f) => f) => {
-  const token = localStorage.getItem("@@token");
+    const { token} = useContext(AuthContext);
+
+  console.log(token);
   fetch(`${server_url}/${url}`, {
     method: "POST",
     headers: {

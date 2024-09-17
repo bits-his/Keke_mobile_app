@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useCallback,useEffect } from "react";
 import {
     View,
     Text,
@@ -7,10 +7,27 @@ import {
     Button,
     StyleSheet,
 } from "react-native";
+import { _get } from "./Helper";
 import DateTimePicker from "@react-native-community/datetimepicker"; // For selecting date range
 
 export default function collectionTable() {
     const [search, setSearch] = useState("");
+    const [data, setData] = useState([]);
+
+      const getReg = useCallback(() => {
+        // setLoading(true);
+        _get(`vehicles?query_type=select-all-vehicles`, (resp) => {
+          if (resp.success && resp.data) {
+            console.log(resp.data[0])
+            setData(resp.data);
+            // setLoading(false);
+            // console.log(resp);
+          }
+        });
+      }, []);
+      useEffect(() => {
+      getReg()
+      }, []);
 
     // Example dummy data for the table
     const sampleData = [
@@ -21,34 +38,55 @@ export default function collectionTable() {
     ];
 
     // Filters the data within the date range
+      const renderTableHeader = () => (
+        <View style={styles.tableHeader}>
+          <Text style={styles.tableHeaderText}>Vehicle Id</Text>
+          <Text style={styles.tableHeaderText}>Plate No</Text>
+          <Text style={styles.tableHeaderText}>balance</Text>
+        </View>
+      );
+
+      const renderTableRow = ({ item }) => (
+        <View style={styles.tableRow}>
+          <Text style={styles.tableCell}>{item.vehicle_id}</Text>
+          <Text style={styles.tableCell}>{item.plate_no}</Text>
+          <Text style={styles.tableCell}>{item.balance}</Text>
+        </View>
+      );
+
 
     return (
-        <View style={styles.container}>
-            <View style={styles.headerDashboard}>
-                <Text style={styles.headerText}>My Total Collection</Text>
-            </View>
-            <View style={{ flexDirection: 'row' }}>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Search"
-                    keyboardType="email-address"
-                    value={search}
-                    onChangeText={(text) => setSearch("search", text)}
-                />
-                <Text style={styles.button}>Search</Text>
-            </View>
-            <View style={{ margin: 10 }}>
-                <View style={styles.tableHeader}>
-                    <Text style={styles.tableHeaderText}>Date</Text>
-                    <Text style={styles.tableHeaderText}>vehicle No.</Text>
-                    <Text style={styles.tableHeaderText}>Chassis No.</Text>
-                </View>
-
-                <View>
-                    <Text style={styles.noDataText}>No data available for the selected date range.</Text>
-                </View>
-            </View>
+      <View style={styles.container}>
+        <View style={styles.headerDashboard}>
+          <Text style={styles.headerText}>My Total Collection</Text>
         </View>
+        <View style={{ flexDirection: "row" }}>
+          <TextInput
+            style={styles.input}
+            placeholder="Search"
+            keyboardType="email-address"
+            value={search}
+            onChangeText={(text) => setSearch("search", text)}
+          />
+          <Text style={styles.button}>Search</Text>
+        </View>
+        <View style={{ margin: 10 }}>
+         
+    
+          <FlatList
+            data={data}
+            keyExtractor={(item) => item.id}
+            ListHeaderComponent={renderTableHeader}
+            renderItem={renderTableRow}
+          />
+
+          <View>
+            <Text style={styles.noDataText}>
+              No data available for the selected date range.
+            </Text>
+          </View>
+        </View>
+      </View>
     );
 }
 

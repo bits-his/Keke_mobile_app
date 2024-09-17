@@ -1,12 +1,18 @@
 import { FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Link } from "expo-router";
-import React from "react";
+import React, {useContext} from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { AuthContext } from "./context/Context";
+
 
 export default function DashBoard() {
+  const { user, setUser, token, setToken } = useContext(AuthContext);
     return (
         <View style={styles.container}>
             <View style={styles.headerDashboard}>
+                <Text>
+                    {user.id}
+                </Text>
                 <Text style={styles.headerText}>Welcome To Agent DashBoard</Text>
             </View>
             <View style={{ flexDirection: 'row', width: '100%' }}>
