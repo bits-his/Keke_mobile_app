@@ -23,6 +23,14 @@ export default function RootLayout() {
         name="dashboard"
         options={{ title: "", headerTransparent: true }}
       />
+      <Stack.Screen
+        name="TopupWallet"
+        options={{ title: "", headerTransparent: true }}
+      />
+      <Stack.Screen
+        name="searchVehicles"
+        options={{ title: "", headerTransparent: true }}
+      />
     </Stack>
   );
 }

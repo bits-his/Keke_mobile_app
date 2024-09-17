@@ -22,17 +22,19 @@ export default function DashBoard() {
                     <Link as={TouchableOpacity} href={"/collectionTable"}>
                         <Text style={styles.CardText}>My Collection</Text></Link>
                 </View>
-                {/* <Link as={TouchableOpacity} style={{ width: '50%' }} href={"/dashBoard"}> */}
                 <View style={styles.cards}>
-                    <FontAwesome
-                        style={styles.icon}
-                        name="car"
-                        size={80}
-                        color="#f5c005"
-                    />
-                    <Text style={styles.CardText}>Search Vehicle</Text>
+                    <Link as={TouchableOpacity} href={"/searchVehicles"}>
+                        <FontAwesome
+                            style={styles.icon}
+                            name="car"
+                            size={80}
+                            color="#f5c005"
+                        />
+                    </Link>
+                    <Link as={TouchableOpacity} href={"/searchVehicles"}>
+                        <Text style={styles.CardText}>Search Vehicle</Text>
+                    </Link>
                 </View>
-                {/* </Link> */}
             </View>
             <View style={{ flexDirection: 'row', width: '100%' }}>
                 {/* <View style={styles.cards}>
@@ -49,7 +51,7 @@ export default function DashBoard() {
                     </Link>
                 </View> */}
                 <View style={styles.cards}>
-                    <Link as={TouchableOpacity} href={"/Topup"}>
+                    <Link as={TouchableOpacity} href={"/TopupWallet"}>
                         <MaterialIcons
                             style={styles.icon}
                             name="add-circle-outline"
@@ -57,7 +59,7 @@ export default function DashBoard() {
                             color="#f5c005"
                         />
                     </Link>
-                    <Link as={TouchableOpacity} href={"/Topup"}>
+                    <Link as={TouchableOpacity} href={"/TopupWallet"}>
                         <Text style={styles.CardText}>Top Up</Text>
                     </Link>
                 </View>
@@ -80,7 +82,7 @@ const styles = StyleSheet.create({
     headerText: {
         textAlign: 'center',
         fontSize: 25,
-        marginTop: 120,
+        marginTop: 40,
         color: "white",
         fontWeight: 'bold',
         fontFamily: 'Arial',
