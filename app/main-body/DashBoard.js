@@ -1,6 +1,7 @@
 import React from "react";
 import { Text, View, FlatList, StyleSheet, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
 
 const data = [
   {
@@ -33,30 +34,32 @@ const data = [
     id: 7,
     title: "Search Vehicle",
   },
+
 ];
 export default function DashBoard() {
+  const navigate = useNavigation()
   const itemPressHandler = (value) => {
     console.log("see me", value);
+    navigate.navigate('../helpers/Range')
   };
 
   const items = ({ item }) => (
-    <View>
-      <Pressable
-        android_ripple={{ color: "#ccc" }}
-        onPress={() => itemPressHandler(item)}
-      >
-        <View>
-          <Text>{item.title}</Text>
-          <Text>{item.amount ? item.amount : ""}</Text>
-        </View>
-      </Pressable>
-    </View>
+    <Pressable
+      android_ripple={{ color: "#ccc" }}
+      onPress={() => itemPressHandler(item)}
+      style={styles.item}
+    >
+      <View>
+        <Text style={styles.itemText}>{item.title}</Text>
+        <Text style={styles.itemAmount}>{item.amount ? item.amount : ""}</Text>
+      </View>
+    </Pressable>
   );
 
   return (
     <SafeAreaView style={styles.container}>
+      <Text style={styles.textHeader}>Welcome, Ishaq</Text>
       <View>
-        <Text>Welcome, Ishaq</Text>
         <FlatList data={data} renderItem={items} numColumns={2} keyExtractor={(item) => item.id} />
       </View>
     </SafeAreaView>
@@ -69,14 +72,32 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     marginTop: 0,
-    justifyContent: 'center',
-    paddingHorizontal: 3
+    paddingHorizontal: 0,
+  },
+  textHeader: {
+    fontSize: 20,
+    fontWeight: '100',
+    marginBottom: 5,
+    top: -12
   },
   item: {
     flex: 1,
-    margin: 1,
+    margin: 2,
+    height: 120,
+    borderCurve: 5,
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#ff9900'
-  }
+    backgroundColor: '#ff9900',
+  },
+  itemText: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold'
+  },
+  itemAmount: {
+    color: "white",
+    fontSize: 14,
+    fontWeight: 'semibold',
+    marginTop: 10
+  },
 })
