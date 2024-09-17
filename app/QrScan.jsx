@@ -29,18 +29,24 @@ const QrScan = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.scannerContainer}>
-        {!scanned ? (
-          <BarCodeScanner
-            onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-            style={StyleSheet.absoluteFillObject}
-          />
-        ) : (
-          <View style={styles.scannedResult}>
-            <Text>Scanned Data: {scannedData}</Text>
-            <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />
-          </View>
-        )}
+      <View style={styles.scannerWrapper}>
+        <View style={styles.frame}>
+          {!scanned ? (
+            <BarCodeScanner
+              onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+              style={styles.scanner}
+            />
+          ) : (
+            <View style={styles.scannedResult}>
+              <Text>Scanned Data: {scannedData}</Text>
+              <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />
+            </View>
+          )}
+          <View style={[styles.edge, styles.topLeft]} />
+          <View style={[styles.edge, styles.topRight]} />
+          <View style={[styles.edge, styles.bottomLeft]} />
+          <View style={[styles.edge, styles.bottomRight]} />
+        </View>
       </View>
     </View>
   );
@@ -51,13 +57,54 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
   },
-  scannerContainer: {
+  scannerWrapper: {
+    width: 250, 
+    height: 250,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  scanner: {
     width: '100%',
-    height: '80%',
+    height: '100%',
+  },
+  frame: {
+    position: 'relative',
+    width: 250, 
+    height: 250,
     borderRadius: 10,
     overflow: 'hidden',
+  },
+  edge: {
+    position: 'absolute',
+    width: 30,
+    height: 30,
+    borderColor: '#f5c005',
+    borderWidth: 4,
+  },
+  topLeft: {
+    top: 0,
+    left: 0,
+    borderTopWidth: 4,
+    borderLeftWidth: 4,
+  },
+  topRight: {
+    top: 0,
+    right: 0,
+    borderTopWidth: 4,
+    borderRightWidth: 4,
+  },
+  bottomLeft: {
+    bottom: 0,
+    left: 0,
+    borderBottomWidth: 4,
+    borderLeftWidth: 4,
+  },
+  bottomRight: {
+    bottom: 0,
+    right: 0,
+    borderBottomWidth: 4,
+    borderRightWidth: 4,
   },
   scannedResult: {
     justifyContent: 'center',

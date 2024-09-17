@@ -20,7 +20,7 @@ const QrResult = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http:192.168.1.112:44405/vehicles?query_type=verify&plate_no=123456plate`)
+    fetch(`http:192.168.1.112:44405/vehicles?query_type=verify&plate_no=kmc24efesd`)
       .then((response) => response.json())
       .then((response) => {
         setLoading(false);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 
 const Topup = () => {
@@ -6,15 +6,66 @@ const Topup = () => {
   const [vehicleNumber, setVehicleNumber] = useState('');
   const [ownerName, setOwnerName] = useState('');
   const [amount, setAmount] = useState('');
+  const [vehicleError, setVehicleError] = useState('');
 
-  const handleSubmit = () => {
-    console.log(`Selected Option: ${selectedOption}`);
-    if (selectedOption === 'vehicle') {
-      console.log(`Vehicle Number: ${vehicleNumber}`);
-    } else if (selectedOption === 'owner') {
-      console.log(`Owner Name: ${ownerName}`);
+  // Fetch owner name based on vehicle number
+  useEffect(() => {
+    if (vehicleNumber) {
+      fetchOwnerName(vehicleNumber);
+    } else {
+      setOwnerName('');
     }
-    console.log(`Amount: ${amount}`);
+  }, [vehicleNumber]);
+
+  const fetchOwnerName = async (vehicleNumber) => {
+    try {
+      // Assuming the API endpoint is something like /api/vehicles/{vehicleNumber}
+      const response = await fetch(`https://your-backend-api.com/api/vehicles/${vehicleNumber}`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.ownerName) {
+          setOwnerName(data.ownerName);
+          setVehicleError('');
+        } else {
+          setOwnerName('');
+          setVehicleError('Vehicle not found');
+        }
+      } else {
+        setOwnerName('');
+        setVehicleError('Vehicle not found');
+      }
+    } catch (error) {
+      setVehicleError('Error fetching vehicle information');
+      setOwnerName('');
+    }
+  };
+
+  const handleSubmit = async () => {
+    const topupData = {
+      vehicleNumber,
+      ownerName,
+      amount,
+    };
+
+    try {
+      const response = await fetch('https://your-backend-api.com/api/topup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(topupData),
+      });
+
+      if (response.ok) {
+        console.log('Topup successful');
+        // Handle success response
+      } else {
+        console.log('Error during topup');
+        // Handle error response
+      }
+    } catch (error) {
+      console.error('Error submitting topup:', error);
+    }
   };
 
   return (
@@ -38,12 +89,16 @@ const Topup = () => {
           </View>
 
           {selectedOption === 'vehicle' ? (
-            <TextInput
-              style={styles.input}
-              placeholder="Enter Vehicle Number"
-              value={vehicleNumber}
-              onChangeText={setVehicleNumber}
-            />
+            <>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter Vehicle Number"
+                value={vehicleNumber}
+                onChangeText={setVehicleNumber}
+              />
+              {ownerName ? <Text style={styles.ownerName}>Owner: {ownerName}</Text> : null}
+              {vehicleError ? <Text style={styles.errorText}>{vehicleError}</Text> : null}
+            </>
           ) : (
             <TextInput
               style={styles.input}
@@ -140,6 +195,14 @@ const styles = StyleSheet.create({
   submitButtonText: {
     color: '#fff',
     fontWeight: 'bold',
+  },
+  ownerName: {
+    marginBottom: 10,
+    fontSize: 16,
+    color: '#000',
+  },
+  errorText: {
+    color: 'red',
   },
 });
 
