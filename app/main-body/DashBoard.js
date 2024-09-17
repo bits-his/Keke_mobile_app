@@ -38,6 +38,7 @@ const data = [
 ];
 export default function DashBoard() {
   const navigate = useNavigation()
+
   const itemPressHandler = (value) => {
     console.log("see me", value);
     navigate.navigate('../helpers/Range')

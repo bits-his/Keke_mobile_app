@@ -15,7 +15,7 @@
     "app/GeneralStyles",
     "app/index.js",
     "app/_layout.js",
-    "app/mainBody/LogIn.js",
+    "app/Signin/LogIn.js",
     "app/dashBoard.js"
   ]
 }
