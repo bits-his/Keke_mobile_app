@@ -1,44 +1,48 @@
-import React from 'react';
-import { Text, View, StyleSheet, FlatList, TextInput } from 'react-native';
+import React, { useState } from "react";
+import {
+    View,
+    Text,
+    FlatList,
+    TextInput,
+    Button,
+    StyleSheet,
+} from "react-native";
 
 export default function Range() {
-    // Sample data (replace with your actual data)
-    const data = [
-        { id: '1', date: '2023-09-01', vehicleNo: 'ABC123', Amount: 5000 },
-        { id: '2', date: '2023-09-02', vehicleNo: 'XYZ987', Amount: 6000 },
-    ];
+    const [search, setSearch] = useState("");
 
-    const tableItems = ({ item }) => (
-        <View style={styles.tableRow}>
-            <Text style={[styles.tableCell, styles.tableCellWithBorder]}>{item.date}</Text>
-            <Text style={[styles.tableCell, styles.tableCellVehicle]}>{item.vehicleNo}</Text>
-            <Text style={styles.tableCellAmount}>{item.Amount}</Text>
-        </View>
-    );
+    const sampleData = [
+        { id: 1, date: "2023-09-14", Vehicle_no: "B-001", amount: "CH-12345" },
+        { id: 2, date: "2023-09-15", Vehicle_no: "B-002", amount: "CH-12346" },
+        { id: 3, date: "2023-09-16", Vehicle_no: "B-003", amount: "CH-12347" },
+        { id: 4, date: "2023-09-17", Vehicle_no: "B-004", amount: "CH-12348" },
+    ];
 
     return (
         <View style={styles.container}>
-            <View style={styles.inputContainer}>
-                <Text style={styles.label}>Select Date Range</Text>
-                <TextInput style={styles.input} placeholder="Enter date range" />
+            <View style={styles.headerDashboard}>
+                <Text style={styles.headerText}>My Total Collection</Text>
             </View>
-
-            <View style={styles.tableContainer}>
+            <View style={{ flexDirection: 'row' }}>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Search"
+                    keyboardType="email-address"
+                    value={search}
+                    onChangeText={(text) => setSearch("search", text)}
+                />
+                <Text style={styles.button}>Search</Text>
+            </View>
+            <View style={{ margin: 10 }}>
                 <View style={styles.tableHeader}>
                     <Text style={styles.tableHeaderText}>Date</Text>
-                    <Text style={[styles.tableHeaderText, styles.tableHeaderBorder]}>Vehicle No</Text>
-                    <Text style={[styles.tableHeaderText, styles.tableHeaderAmount]}>Amount</Text>
+                    <Text style={styles.tableHeaderText}>Vehicle No.</Text>
+                    <Text style={styles.tableHeaderText}>Amount</Text>
                 </View>
 
-                {data && data.length > 0 ? (
-                    <FlatList
-                        data={data}
-                        renderItem={tableItems}
-                        keyExtractor={(item) => item.id}
-                    />
-                ) : (
-                    <Text style={styles.noDataText}>There is no data to display</Text>
-                )}
+                <View>
+                    <Text style={styles.noDataText}>No data available for the selected date range.</Text>
+                </View>
             </View>
         </View>
     );
@@ -46,91 +50,77 @@ export default function Range() {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 16,
+        flex: 1,
+        backgroundColor: "#f5f5f5",
     },
-    inputContainer: {
-        marginBottom: 20,
+    headerDashboard: {
+        backgroundColor: "#f5c005",
+        height: 120,
+        borderBottomLeftRadius: 40,
+        borderBottomRightRadius: 40,
+        marginBottom: 40
     },
-    label: {
-        fontSize: 16,
-        marginBottom: 8,
-    },
-    input: {
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 4,
-        padding: 8,
-        fontSize: 16,
-    },
-    tableContainer: {
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 4,
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
+    headerText: {
+        textAlign: 'center',
+        marginTop: 40,
+        fontSize: 20,
+        color: "white",
+        fontWeight: 'bold',
+        fontFamily: 'Arial',
     },
     tableHeader: {
-        width: '100%',
-        flexDirection: 'row',
-        backgroundColor: '#f5c005',
+        flexDirection: "row",
+        justifyContent: "space-between",
+        padding: 10,
+        backgroundColor: "#f5c005",
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
-        borderColor: '#ccc',
-    },
-    tableHeaderAmount: {
-        borderColor: '#ccc',
-        paddingVertical: 5,
     },
     tableHeaderText: {
+        fontWeight: "bold",
         flex: 1,
-        fontWeight: 'semibold',
-        fontSize: 12,
-        paddingLeft: 17,
-        paddingTop: 10,
+        textAlign: "center",
     },
     tableRow: {
-        flexDirection: 'row',
-        height: 40,
-        justifyContent: 'center',
+        flexDirection: "row",
+        justifyContent: "space-between",
+        padding: 10,
+        backgroundColor: "#fff",
         borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
-        alignItems: 'stretch',
+        borderColor: "#ccc",
     },
     tableCell: {
         flex: 1,
-        fontSize: 16,
-        paddingHorizontal: 10,
-        paddingVertical: 10,
-    },
-    tableCellWithBorder: {
-        borderLeftWidth: 1,
-        borderRightWidth: 1,
-        borderColor: '#ccc',
-    },
-    tableHeaderBorder: {
-        // borderLeftWidth: 1,
-        borderColor: '#ccc',
-        // borderRightWidth: 1,
-        paddingLeft: 5,
-    },
-    tableCellVehicle: {
-        flex: 1,
-        fontSize: 16,
-        paddingLeft: 10,
-    },
-    tableCellAmount: {
-        flex: 1,
-        fontSize: 16,
-        paddingVertical: 10,
-        textAlign: 'left',
-        borderLeftWidth: 1,
-        borderHeight: 20,
-        borderLeftColor: '#ccc',
-        paddingLeft: 10,
+        textAlign: "center",
     },
     noDataText: {
-        padding: 10,
+        textAlign: "center",
+        marginTop: 20,
+        color: "gray",
+    },
+    input: {
+        height: 40,
+        borderColor: "#f5c005",
+        borderWidth: 1,
+        width: "75%",
+        paddingHorizontal: 10,
+        marginTop: 7,
+        marginLeft: 10,
+        borderBottomLeftRadius: 5,
+        borderTopLeftRadius: 5,
+        // borderRadius: 5
+    },
+    button: {
+        backgroundColor: "#f5c005",
+        padding: 8,
+        width: "20%",
+        alignItems: "center",
+        color: 'white',
         textAlign: 'center',
-        color: '#666',
+        fontSize: 18,
+        marginTop: 7,
+        height: 40,
+        borderBottomRightRadius: 5,
+        borderTopRightRadius: 5,
     },
 });

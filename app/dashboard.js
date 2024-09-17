@@ -40,14 +40,27 @@ export default function DashBoard() {
                         </View>
                     </View>
                     <View
-                        style={{
-                            flexDirection: "column",
-                            width: '50%',
-                            // borderWidth: 1,
-                            // borderColor: "#fff",
-                        }}
+                        style={styles.button}
                     >
-                        <Link as={TouchableOpacity} href={""}>
+                        <Ionicons
+                            name="add"
+                            size={20}
+                            color="#000"
+                            style={{
+                                marginTop: 20,
+                            }}
+                        />
+                        <Link
+                            as={TouchableOpacity}
+                            href={""}
+                            style={{
+                                textAlign: 'center',
+                                color: '#f5c005',
+                                fontWeight: 'bold',
+                                textTransform: "capitalize",
+                                width: '65%'
+                            }}
+                        >
                             add fund
                         </Link>
                     </View>
@@ -123,7 +136,7 @@ const styles = StyleSheet.create({
     },
     cards: {
         margin: 10,
-        // borderWidth: 1,
+        borderWidth: 1,
         backgroundColor: '#fff',
         width: "45%",
         textAlign: "center",
@@ -171,5 +184,17 @@ const styles = StyleSheet.create({
     plusIcon: {
         marginTop: 15,
         marginLeft: -20
+    },
+    button: {
+        backgroundColor: "#fff",
+        padding: 6,
+        paddingTop: 7,
+        width: '35%',
+        color: "#f5c005",
+        borderRadius: 50,
+        marginLeft: 25,
+        marginTop: 14,
+        height: 35,
+        flexDirection: 'row'
     }
 })

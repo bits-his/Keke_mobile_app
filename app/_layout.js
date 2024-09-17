@@ -21,7 +21,7 @@ export default function RootLayout() {
       />
       <Stack.Screen
         name="dashboard"
-        options={{ title: "", headerTransparent: true }}
+        options={{ title: "", headerShown: false }}
       />
       <Stack.Screen
         name="TopupWallet"
@@ -30,6 +30,10 @@ export default function RootLayout() {
       <Stack.Screen
         name="searchVehicles"
         options={{ title: "", headerTransparent: true }}
+      />
+      <Stack.Screen
+        name="main-body/DashBoard"
+        options={{ title: "", headerShown: false }}
       />
     </Stack>
   );

@@ -7,12 +7,10 @@ import {
     Button,
     StyleSheet,
 } from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker"; // For selecting date range
 
 export default function collectionTable() {
     const [search, setSearch] = useState("");
 
-    // Example dummy data for the table
     const sampleData = [
         { id: 1, date: "2023-09-14", batchNo: "B-001", chassisNo: "CH-12345" },
         { id: 2, date: "2023-09-15", batchNo: "B-002", chassisNo: "CH-12346" },
@@ -20,12 +18,11 @@ export default function collectionTable() {
         { id: 4, date: "2023-09-17", batchNo: "B-004", chassisNo: "CH-12348" },
     ];
 
-    // Filters the data within the date range
 
     return (
         <View style={styles.container}>
             <View style={styles.headerDashboard}>
-                <Text style={styles.headerText}>My Total Collection</Text>
+                <Text style={styles.headerText}>My Vehicles</Text>
             </View>
             <View style={{ flexDirection: 'row' }}>
                 <TextInput
@@ -40,7 +37,7 @@ export default function collectionTable() {
             <View style={{ margin: 10 }}>
                 <View style={styles.tableHeader}>
                     <Text style={styles.tableHeaderText}>Date</Text>
-                    <Text style={styles.tableHeaderText}>vehicle No.</Text>
+                    <Text style={styles.tableHeaderText}>Vehicle No.</Text>
                     <Text style={styles.tableHeaderText}>Chassis No.</Text>
                 </View>
 

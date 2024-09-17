@@ -73,7 +73,7 @@ export default function SignIn() {
             </View>
           </View>
         </View>
-        <Link as={TouchableOpacity} style={styles.button} href={"/dashboard"}>Submit</Link>
+        <Link as={TouchableOpacity} style={styles.button} href={"/main-body/DashBoard"}>Submit</Link>
       </View>
     </View>
   );
