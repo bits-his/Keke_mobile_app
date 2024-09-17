@@ -1,15 +1,71 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 
 const Topup = () => {
   const [selectedOption, setSelectedOption] = useState('vehicle');
   const [vehicleNumber, setVehicleNumber] = useState('');
+  const [ownerName, setOwnerName] = useState('');
   const [amount, setAmount] = useState('');
+  const [vehicleError, setVehicleError] = useState('');
 
-  const handleSubmit = () => {
-    console.log(`Selected Option: ${selectedOption}`);
-    console.log(`Vehicle Number: ${vehicleNumber}`);
-    console.log(`Amount: ${amount}`);
+  // Fetch owner name based on vehicle number
+  useEffect(() => {
+    if (vehicleNumber) {
+      fetchOwnerName(vehicleNumber);
+    } else {
+      setOwnerName('');
+    }
+  }, [vehicleNumber]);
+
+  const fetchOwnerName = async (vehicleNumber) => {
+    try {
+      // Assuming the API endpoint is something like /api/vehicles/{vehicleNumber}
+      const response = await fetch(`https://your-backend-api.com/api/vehicles/${vehicleNumber}`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.ownerName) {
+          setOwnerName(data.ownerName);
+          setVehicleError('');
+        } else {
+          setOwnerName('');
+          setVehicleError('Vehicle not found');
+        }
+      } else {
+        setOwnerName('');
+        setVehicleError('Vehicle not found');
+      }
+    } catch (error) {
+      setVehicleError('Error fetching vehicle information');
+      setOwnerName('');
+    }
+  };
+
+  const handleSubmit = async () => {
+    const topupData = {
+      vehicleNumber,
+      ownerName,
+      amount,
+    };
+
+    try {
+      const response = await fetch('https://your-backend-api.com/api/topup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(topupData),
+      });
+
+      if (response.ok) {
+        console.log('Topup successful');
+        // Handle success response
+      } else {
+        console.log('Error during topup');
+        // Handle error response
+      }
+    } catch (error) {
+      console.error('Error submitting topup:', error);
+    }
   };
 
   return (
@@ -32,12 +88,26 @@ const Topup = () => {
             </TouchableOpacity>
           </View>
 
-          <TextInput
-            style={styles.input}
-            placeholder="Enter Vehicle Number"
-            value={vehicleNumber}
-            onChangeText={setVehicleNumber}
-          />
+          {selectedOption === 'vehicle' ? (
+            <>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter Vehicle Number"
+                value={vehicleNumber}
+                onChangeText={setVehicleNumber}
+              />
+              {ownerName ? <Text style={styles.ownerName}>Owner: {ownerName}</Text> : null}
+              {vehicleError ? <Text style={styles.errorText}>{vehicleError}</Text> : null}
+            </>
+          ) : (
+            <TextInput
+              style={styles.input}
+              placeholder="Enter Owner Name"
+              value={ownerName}
+              onChangeText={setOwnerName}
+            />
+          )}
+
           <TextInput
             style={styles.input}
             placeholder="Enter Amount"
@@ -63,14 +133,14 @@ const styles = StyleSheet.create({
   },
   containHeader: {
     backgroundColor: "#f5c005",
-    height: 120,
-    borderBottomLeftRadius: 40,
-    borderBottomRightRadius: 40,
+    height: 220,
+    borderBottomLeftRadius: 50,
+    borderBottomRightRadius: 50,
   },
   text: {
     textAlign: 'center',
-    fontSize: 20,
-    marginTop: 45,
+    fontSize: 25,
+    marginTop: 120,
     color: "white",
     fontWeight: 'bold',
     fontFamily: 'Arial',
@@ -87,22 +157,22 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
   buttonGroup: {
-    justifyContent: 'space-between',
     flexDirection: 'row',
     marginBottom: 20,
   },
   button: {
+    flex: 1,
     padding: 10,
     borderWidth: 1,
     borderColor: '#f5c005',
     backgroundColor: '#fff',
-    marginHorizontal: 5,
     borderRadius: 5,
   },
   selectedButton: {
     backgroundColor: '#f5c005',
   },
   buttonText: {
+    textAlign: 'center',
     color: '#000',
     fontWeight: 'bold',
   },
@@ -124,6 +194,14 @@ const styles = StyleSheet.create({
   submitButtonText: {
     color: '#fff',
     fontWeight: 'bold',
+  },
+  ownerName: {
+    marginBottom: 10,
+    fontSize: 16,
+    color: '#000',
+  },
+  errorText: {
+    color: 'red',
   },
 });
 
