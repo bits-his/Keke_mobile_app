@@ -15,7 +15,7 @@ export default function DashBoard() {
                         <Ionicons
                             style={styles.icon}
                             name="albums"
-                            size={70}
+                            size={80}
                             color="#f5c005"
                         />
                     </Link>
@@ -27,7 +27,7 @@ export default function DashBoard() {
                     <FontAwesome
                         style={styles.icon}
                         name="car"
-                        size={70}
+                        size={80}
                         color="#f5c005"
                     />
                     <Text style={styles.CardText}>Search Vehicle</Text>
@@ -35,25 +35,25 @@ export default function DashBoard() {
                 {/* </Link> */}
             </View>
             <View style={{ flexDirection: 'row', width: '100%' }}>
-                <View style={styles.cards}>
+                {/* <View style={styles.cards}>
                     <Link as={TouchableOpacity} href={"/QrScan"}>
                         <MaterialIcons
                             style={styles.icon}
                             name="qr-code-scanner"
-                            size={70}
+                            size={80}
                             color="#f5c005"
                         />
                     </Link>
                     <Link as={TouchableOpacity} href={"/QrScan"}>
                         <Text style={styles.CardText}>Scan QR Code</Text>
                     </Link>
-                </View>
+                </View> */}
                 <View style={styles.cards}>
                     <Link as={TouchableOpacity} href={"/Topup"}>
                         <MaterialIcons
                             style={styles.icon}
                             name="add-circle-outline"
-                            size={70}
+                            size={80}
                             color="#f5c005"
                         />
                     </Link>
@@ -73,9 +73,9 @@ const styles = StyleSheet.create({
     headerDashboard: {
         backgroundColor: "#f5c005",
         height: 220,
-        borderBottomLeftRadius: 50,
-        borderBottomRightRadius: 50,
-        marginBottom: 50
+        borderBottomLeftRadius: 40,
+        borderBottomRightRadius: 40,
+        marginBottom: 40
     },
     headerText: {
         textAlign: 'center',
@@ -92,11 +92,13 @@ const styles = StyleSheet.create({
         width: "45%",
         textAlign: "center",
         alignItems: 'center',
+        justifyContent: 'center',
         padding: 10,
         borderRadius: 15,
         borderColor: 'gray',
         shadowColor: "#000",
-        elevation: 20
+        elevation: 20,
+        height: 180
     },
     icon: {
 

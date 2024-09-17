@@ -10,11 +10,7 @@ import {
 import DateTimePicker from "@react-native-community/datetimepicker"; // For selecting date range
 
 export default function collectionTable() {
-    const [data, setData] = useState([]);
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
-    const [showStartPicker, setShowStartPicker] = useState(false);
-    const [showEndPicker, setShowEndPicker] = useState(false);
+    const [search, setSearch] = useState("");
 
     // Example dummy data for the table
     const sampleData = [
@@ -25,18 +21,21 @@ export default function collectionTable() {
     ];
 
     // Filters the data within the date range
-    const filterDataByDate = () => {
-        const filteredData = sampleData.filter(
-            (item) =>
-                new Date(item.date) >= startDate && new Date(item.date) <= endDate
-        );
-        setData(filteredData);
-    };
 
     return (
         <View style={styles.container}>
             <View style={styles.headerDashboard}>
                 <Text style={styles.headerText}>My Total Collection</Text>
+            </View>
+            <View style={{ flexDirection: 'row' }}>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Search"
+                    keyboardType="email-address"
+                    value={search}
+                    onChangeText={(text) => setSearch("search", text)}
+                />
+                <Text style={styles.button}>Search</Text>
             </View>
             <View style={{ margin: 10 }}>
                 <View style={styles.tableHeader}>
@@ -60,15 +59,15 @@ const styles = StyleSheet.create({
     },
     headerDashboard: {
         backgroundColor: "#f5c005",
-        height: 220,
-        borderBottomLeftRadius: 50,
-        borderBottomRightRadius: 50,
-        marginBottom: 50
+        height: 120,
+        borderBottomLeftRadius: 40,
+        borderBottomRightRadius: 40,
+        marginBottom: 40
     },
     headerText: {
         textAlign: 'center',
-        fontSize: 25,
-        marginTop: 120,
+        marginTop: 40,
+        fontSize: 20,
         color: "white",
         fontWeight: 'bold',
         fontFamily: 'Arial',
@@ -102,5 +101,30 @@ const styles = StyleSheet.create({
         textAlign: "center",
         marginTop: 20,
         color: "gray",
+    },
+    input: {
+        height: 40,
+        borderColor: "#f5c005",
+        borderWidth: 1,
+        width: "75%",
+        paddingHorizontal: 10,
+        marginTop: 7,
+        marginLeft: 10,
+        borderBottomLeftRadius: 5,
+        borderTopLeftRadius: 5,
+        // borderRadius: 5
+    },
+    button: {
+        backgroundColor: "#f5c005",
+        padding: 8,
+        width: "20%",
+        alignItems: "center",
+        color: 'white',
+        textAlign: 'center',
+        fontSize: 18,
+        marginTop: 7,
+        height: 40,
+        borderBottomRightRadius: 5,
+        borderTopRightRadius: 5,
     },
 });

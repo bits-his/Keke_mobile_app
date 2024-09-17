@@ -13,42 +13,42 @@ const Topup = () => {
   };
 
   return (
-      <View style={styles.containHeader}>
-        <Text style={styles.text}>TOP UP</Text>
-    <View style={styles.container}>
-      <View style={styles.card}>
-        <View style={styles.buttonGroup}>
-          <TouchableOpacity
-            style={[styles.button, selectedOption === 'vehicle' && styles.selectedButton]}
-            onPress={() => setSelectedOption('vehicle')}
-          >
-            <Text style={styles.buttonText}>Vehicle</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.button, selectedOption === 'owner' && styles.selectedButton]}
-            onPress={() => setSelectedOption('owner')}
-          >
-            <Text style={styles.buttonText}>Owner</Text>
+    <View style={styles.containHeader}>
+      <Text style={styles.text}>TOP UP</Text>
+      <View style={styles.container}>
+        <View style={styles.card}>
+          <View style={styles.buttonGroup}>
+            <TouchableOpacity
+              style={[styles.button, selectedOption === 'vehicle' && styles.selectedButton]}
+              onPress={() => setSelectedOption('vehicle')}
+            >
+              <Text style={styles.buttonText}>Vehicle</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.button, selectedOption === 'owner' && styles.selectedButton]}
+              onPress={() => setSelectedOption('owner')}
+            >
+              <Text style={styles.buttonText}>Owner</Text>
+            </TouchableOpacity>
+          </View>
+
+          <TextInput
+            style={styles.input}
+            placeholder="Enter Vehicle Number"
+            value={vehicleNumber}
+            onChangeText={setVehicleNumber}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Enter Amount"
+            value={amount}
+            keyboardType="numeric"
+            onChangeText={setAmount}
+          />
+          <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+            <Text style={styles.submitButtonText}>Submit</Text>
           </TouchableOpacity>
         </View>
-
-        <TextInput
-          style={styles.input}
-          placeholder="Enter Vehicle Number"
-          value={vehicleNumber}
-          onChangeText={setVehicleNumber}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Enter Amount"
-          value={amount}
-          keyboardType="numeric"
-          onChangeText={setAmount}
-        />
-        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-          <Text style={styles.submitButtonText}>Submit</Text>
-        </TouchableOpacity>
-      </View>
       </View>
     </View>
   );
@@ -63,17 +63,17 @@ const styles = StyleSheet.create({
   },
   containHeader: {
     backgroundColor: "#f5c005",
-        height: 220,
-        borderBottomLeftRadius: 50,
-        borderBottomRightRadius: 50,
+    height: 120,
+    borderBottomLeftRadius: 40,
+    borderBottomRightRadius: 40,
   },
   text: {
     textAlign: 'center',
-        fontSize: 25,
-        marginTop: 120,
-        color: "white",
-        fontWeight: 'bold',
-        fontFamily: 'Arial',
+    fontSize: 20,
+    marginTop: 45,
+    color: "white",
+    fontWeight: 'bold',
+    fontFamily: 'Arial',
   },
   card: {
     height: 300,
@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 5,
+    marginTop: 50,
   },
   buttonGroup: {
     justifyContent: 'space-between',
