@@ -4,51 +4,66 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-nativ
 const Topup = () => {
   const [selectedOption, setSelectedOption] = useState('vehicle');
   const [vehicleNumber, setVehicleNumber] = useState('');
+  const [ownerName, setOwnerName] = useState('');
   const [amount, setAmount] = useState('');
 
   const handleSubmit = () => {
     console.log(`Selected Option: ${selectedOption}`);
-    console.log(`Vehicle Number: ${vehicleNumber}`);
+    if (selectedOption === 'vehicle') {
+      console.log(`Vehicle Number: ${vehicleNumber}`);
+    } else if (selectedOption === 'owner') {
+      console.log(`Owner Name: ${ownerName}`);
+    }
     console.log(`Amount: ${amount}`);
   };
 
   return (
-      <View style={styles.containHeader}>
-        <Text style={styles.text}>TOP UP</Text>
-    <View style={styles.container}>
-      <View style={styles.card}>
-        <View style={styles.buttonGroup}>
-          <TouchableOpacity
-            style={[styles.button, selectedOption === 'vehicle' && styles.selectedButton]}
-            onPress={() => setSelectedOption('vehicle')}
-          >
-            <Text style={styles.buttonText}>Vehicle</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.button, selectedOption === 'owner' && styles.selectedButton]}
-            onPress={() => setSelectedOption('owner')}
-          >
-            <Text style={styles.buttonText}>Owner</Text>
+    <View style={styles.containHeader}>
+      <Text style={styles.text}>TOP UP</Text>
+      <View style={styles.container}>
+        <View style={styles.card}>
+          <View style={styles.buttonGroup}>
+            <TouchableOpacity
+              style={[styles.button, selectedOption === 'vehicle' && styles.selectedButton]}
+              onPress={() => setSelectedOption('vehicle')}
+            >
+              <Text style={styles.buttonText}>Vehicle</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.button, selectedOption === 'owner' && styles.selectedButton]}
+              onPress={() => setSelectedOption('owner')}
+            >
+              <Text style={styles.buttonText}>Owner</Text>
+            </TouchableOpacity>
+          </View>
+
+          {selectedOption === 'vehicle' ? (
+            <TextInput
+              style={styles.input}
+              placeholder="Enter Vehicle Number"
+              value={vehicleNumber}
+              onChangeText={setVehicleNumber}
+            />
+          ) : (
+            <TextInput
+              style={styles.input}
+              placeholder="Enter Owner Name"
+              value={ownerName}
+              onChangeText={setOwnerName}
+            />
+          )}
+
+          <TextInput
+            style={styles.input}
+            placeholder="Enter Amount"
+            value={amount}
+            keyboardType="numeric"
+            onChangeText={setAmount}
+          />
+          <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+            <Text style={styles.submitButtonText}>Submit</Text>
           </TouchableOpacity>
         </View>
-
-        <TextInput
-          style={styles.input}
-          placeholder="Enter Vehicle Number"
-          value={vehicleNumber}
-          onChangeText={setVehicleNumber}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Enter Amount"
-          value={amount}
-          keyboardType="numeric"
-          onChangeText={setAmount}
-        />
-        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-          <Text style={styles.submitButtonText}>Submit</Text>
-        </TouchableOpacity>
-      </View>
       </View>
     </View>
   );
@@ -63,17 +78,17 @@ const styles = StyleSheet.create({
   },
   containHeader: {
     backgroundColor: "#f5c005",
-        height: 220,
-        borderBottomLeftRadius: 50,
-        borderBottomRightRadius: 50,
+    height: 220,
+    borderBottomLeftRadius: 50,
+    borderBottomRightRadius: 50,
   },
   text: {
     textAlign: 'center',
-        fontSize: 25,
-        marginTop: 120,
-        color: "white",
-        fontWeight: 'bold',
-        fontFamily: 'Arial',
+    fontSize: 25,
+    marginTop: 120,
+    color: "white",
+    fontWeight: 'bold',
+    fontFamily: 'Arial',
   },
   card: {
     height: 300,
@@ -88,22 +103,22 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   buttonGroup: {
-    justifyContent: 'space-between',
     flexDirection: 'row',
     marginBottom: 20,
   },
   button: {
+    flex: 1,
     padding: 10,
     borderWidth: 1,
     borderColor: '#f5c005',
     backgroundColor: '#fff',
-    marginHorizontal: 5,
     borderRadius: 5,
   },
   selectedButton: {
     backgroundColor: '#f5c005',
   },
   buttonText: {
+    textAlign: 'center',
     color: '#000',
     fontWeight: 'bold',
   },

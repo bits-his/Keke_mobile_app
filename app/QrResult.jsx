@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, ActivityIndicator, Alert } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import moment from 'moment';
+// import QrScan from './QrScan';
 
 const keke = require('../assets/images/keke_napep.png');
 const brainstormLogo = require('../assets/images/logo.png');
@@ -19,18 +20,20 @@ const QrResult = () => {
 
   useEffect(() => {
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      const fakeData = [
-        {
-          pin: 'ABC123',
-          vehicle_make: 'Toyota',
-          plate_no: 'XYZ789',
-          expiry_date: '2023-12-31',
-        },
-      ];
-      setData(fakeData);
-    }, 2000);
+    fetch(`http:192.168.1.112:44405/vehicles?query_type=verify&plate_no=123456plate`)
+      .then((response) => response.json())
+      .then((response) => {
+        setLoading(false);
+        if (response.success) {
+          setData(response.data);
+        } else {
+          Alert.alert('Error', 'Failed to fetch data');
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+      });
   }, [plate_no]);
 
   if (loading) {
@@ -60,6 +63,10 @@ const QrResult = () => {
           </View>
           <View style={styles.row}>
             <Text style={styles.infoTitle}>PLATE NUMBER:</Text>
+            <Text style={styles.infoData}>{data[0]?.plate_no?.toUpperCase() || 'N/A'}</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.infoTitle}>BALANCE:</Text>
             <Text style={styles.infoData}>{data[0]?.plate_no?.toUpperCase() || 'N/A'}</Text>
           </View>
           <View style={styles.row}>
