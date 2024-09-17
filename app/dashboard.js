@@ -62,7 +62,7 @@ export default function DashBoard() {
                     </Link>
                 </View>
                 <View style={styles.cards}>
-                    <Link as={TouchableOpacity} href={"/QrScan"}>
+                    <Link as={TouchableOpacity} href={"/QrResult"}>
                         <MaterialIcons
                             style={styles.icon}
                             name="add-circle-outline"
@@ -70,8 +70,8 @@ export default function DashBoard() {
                             color="#f5c005"
                         />
                     </Link>
-                    <Link as={TouchableOpacity} href={"/QrScan"}>
-                        <Text style={styles.CardText}>Scan Qr Code</Text>
+                    <Link as={TouchableOpacity} href={"/QrResult"}>
+                        <Text style={styles.CardText}>Sca Code</Text>
                     </Link>
                 </View>
             </View>

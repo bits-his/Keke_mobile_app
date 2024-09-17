@@ -14,6 +14,7 @@ const QrResult = () => {
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
 
+
   const handleBackClick = () => {
     navigation.goBack();
   };

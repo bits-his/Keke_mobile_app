@@ -1,54 +1,134 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import moment from 'moment';
 
 const Topup = () => {
   const [selectedOption, setSelectedOption] = useState('vehicle');
   const [vehicleNumber, setVehicleNumber] = useState('');
+  const [plateNumber, setPlateNumber] = useState('');
+  const [ownerNumber, setOwnerNumber] = useState('');
   const [ownerName, setOwnerName] = useState('');
-  const [amount, setAmount] = useState('');
+  const [vehicleAmount, setVehicleAmount] = useState('');
+  const [ownerAmount, setOwnerAmount] = useState('');
   const [vehicleError, setVehicleError] = useState('');
+  const [ownerError, setOwnerError] = useState('');
+  const [vehicleData, setVehicleData] = useState([]);
+  const [ownerData, setOwnerData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const sourceId = 'VHC00001';
 
-  // Fetch owner name based on vehicle number
-  useEffect(() => {
-    if (vehicleNumber) {
-      fetchOwnerName(vehicleNumber);
-    } else {
-      setOwnerName('');
-    }
-  }, [vehicleNumber]);
-
-  const fetchOwnerName = async (vehicleNumber) => {
+  // Fetch vehicle data
+  const fetchVehicleData = useCallback(async () => {
+    setLoading(true);
     try {
-      // Assuming the API endpoint is something like /api/vehicles/{vehicleNumber}
-      const response = await fetch(`https://your-backend-api.com/api/vehicles/${vehicleNumber}`);
+      const response = await fetch('http://192.168.1.112:44405/vehicles?query_type=select-all');
+      const respData = await response.json();
+
       if (response.ok) {
-        const data = await response.json();
-        if (data.ownerName) {
-          setOwnerName(data.ownerName);
-          setVehicleError('');
-        } else {
-          setOwnerName('');
-          setVehicleError('Vehicle not found');
-        }
+        const formattedData = respData.data.map((vehicle) => ({
+          vehicle_id: vehicle.vehicle_id,
+          plate_no: vehicle.plate_no,
+        }));
+        setVehicleData(formattedData);
       } else {
-        setOwnerName('');
-        setVehicleError('Vehicle not found');
+        console.error('Error fetching vehicle data');
+        setVehicleData([]);
       }
     } catch (error) {
-      setVehicleError('Error fetching vehicle information');
-      setOwnerName('');
+      console.error('Error fetching vehicle data:', error);
+      setVehicleData([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Fetch owner data
+  const fetchOwnerData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('http://192.168.1.112:44405/vehicle-owners?query_type=select-all');
+      const respData = await response.json();
+
+      if (response.ok) {
+        const formattedData = respData.data.map((owner) => ({
+          account_id: owner.account_id,
+          name: owner.name,
+        }));
+        setOwnerData(formattedData);
+      } else {
+        console.error('Error fetching owner data');
+        setOwnerData([]);
+      }
+    } catch (error) {
+      console.error('Error fetching owner data:', error);
+      setOwnerData([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (selectedOption === 'vehicle') {
+      fetchVehicleData();
+    } else if (selectedOption === 'owner') {
+      fetchOwnerData();
+    }
+  }, [fetchVehicleData, fetchOwnerData, selectedOption]);
+
+  // Handle vehicle number input change
+  const handleVehicleNumberChange = (text) => {
+    setVehicleNumber(text);
+
+    if (Array.isArray(vehicleData)) {
+      const matchingVehicle = vehicleData.find(vehicle => vehicle.vehicle_id === text);
+      if (matchingVehicle) {
+        setPlateNumber(matchingVehicle.plate_no);
+        setVehicleError('');
+      } else {
+        setPlateNumber('');
+        setVehicleError('Vehicle number not correct');
+      }
+    } else {
+      setVehicleError('Vehicle data is not available');
     }
   };
 
+  const handleOwnerNumberChange = (text) => {
+    setOwnerNumber(text);
+
+    if (Array.isArray(ownerData)) {
+      const matchingOwner = ownerData.find(owner => owner.account_id === text);
+      if (matchingOwner) {
+        setOwnerName(matchingOwner.name);
+        setOwnerError('');
+      } else {
+        setOwnerName('');
+        setOwnerError('Owner number not correct');
+      }
+    } else {
+      setOwnerError('Owner data is not available');
+    }
+  };
+
+  // Handle form submission
   const handleSubmit = async () => {
+    const amount = selectedOption === 'vehicle' ? vehicleAmount : ownerAmount;
+    const destinationId = selectedOption === 'vehicle' ? vehicleNumber : ownerNumber;
+
     const topupData = {
-      vehicleNumber,
-      ownerName,
-      amount,
+      query_type: 'top_up',
+      source_id: sourceId,
+      destination_id: destinationId,
+      type_of_top_up: selectedOption,
+      amount: amount,
+      t_date: moment().format('YYYY-MM-DD'),
+      date_from: null,
+      date_to: null,
+      balance: null,
     };
 
     try {
-      const response = await fetch('https://your-backend-api.com/api/topup', {
+      const response = await fetch('http://192.168.1.112:44405/top-up/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -58,10 +138,17 @@ const Topup = () => {
 
       if (response.ok) {
         console.log('Topup successful');
-        // Handle success response
+        // Reset the form
+        setVehicleNumber('');
+        setPlateNumber('');
+        setOwnerNumber('');
+        setOwnerName('');
+        setVehicleAmount('');
+        setOwnerAmount('');
+        setVehicleError('');
+        setSelectedOption('vehicle');
       } else {
         console.log('Error during topup');
-        // Handle error response
       }
     } catch (error) {
       console.error('Error submitting topup:', error);
@@ -94,27 +181,38 @@ const Topup = () => {
                 style={styles.input}
                 placeholder="Enter Vehicle Number"
                 value={vehicleNumber}
-                onChangeText={setVehicleNumber}
+                onChangeText={handleVehicleNumberChange}
               />
-              {ownerName ? <Text style={styles.ownerName}>Owner: {ownerName}</Text> : null}
+              {plateNumber ? <Text style={styles.infoText}>Plate Number: {plateNumber}</Text> : null}
               {vehicleError ? <Text style={styles.errorText}>{vehicleError}</Text> : null}
+              <TextInput
+                style={styles.input}
+                placeholder="Enter Amount"
+                value={vehicleAmount}
+                keyboardType="numeric"
+                onChangeText={setVehicleAmount}
+              />
             </>
           ) : (
-            <TextInput
-              style={styles.input}
-              placeholder="Enter Owner Name"
-              value={ownerName}
-              onChangeText={setOwnerName}
-            />
+            <>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter Owner Number"
+                value={ownerNumber}
+                onChangeText={handleOwnerNumberChange}
+              />
+              {ownerName ? <Text style={styles.infoText}>Owner Name: {ownerName}</Text> : null}
+              {ownerError ? <Text style={styles.errorText}>{ownerError}</Text> : null}
+              <TextInput
+                style={styles.input}
+                placeholder="Enter Amount"
+                value={ownerAmount}
+                keyboardType="numeric"
+                onChangeText={setOwnerAmount}
+              />
+            </>
           )}
 
-          <TextInput
-            style={styles.input}
-            placeholder="Enter Amount"
-            value={amount}
-            keyboardType="numeric"
-            onChangeText={setAmount}
-          />
           <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
             <Text style={styles.submitButtonText}>Submit</Text>
           </TouchableOpacity>
@@ -196,10 +294,12 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
-  ownerName: {
+  infoText: {
+    fontWeight: 'bold',
+    textAlign: 'center',
     marginBottom: 10,
     fontSize: 16,
-    color: '#000',
+    color: '#000'
   },
   errorText: {
     color: 'red',
