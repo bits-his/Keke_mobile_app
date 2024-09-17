@@ -8,12 +8,20 @@ export default function RootLayout() {
         options={{ title: "Welcome", headerShown: false }}
       />
       <Stack.Screen
-        name="dashBoard"
-        options={{ title: "Dashboard", headerShown: false}}
+        name="collectionTable"
+        options={{ title: "", headerTransparent: true }}
       />
       <Stack.Screen
-        name="topup"
-        options={{ title: "TopUp", headerShown: false}}
+        name="Topup"
+        options={{ title: "", headerTransparent: true }}
+      />
+      <Stack.Screen
+        name="QrScan"
+        options={{ title: "", headerTransparent: true }}
+      />
+      <Stack.Screen
+        name="dashboard"
+        options={{ title: "", headerTransparent: true }}
       />
     </Stack>
   );
