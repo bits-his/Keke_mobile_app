@@ -81,8 +81,8 @@ const styles = StyleSheet.create({
     },
     headerText: {
         textAlign: 'center',
-        fontSize: 25,
-        marginTop: 40,
+        fontSize: 20,
+        marginTop: 120,
         color: "white",
         fontWeight: 'bold',
         fontFamily: 'Arial',
