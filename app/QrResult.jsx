@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, ActivityIndicator, Alert } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import moment from 'moment';
-import { _get } from './Helper'; // Assuming this is your fetch helper
+import { _get } from './Helper';
+// import QrScan from './QrScan';
 
 const keke = require('../assets/images/keke_napep.png');
 const brainstormLogo = require('../assets/images/logo.png');
+import { separator } from './Helper';
 
 const QrResult = () => {
   const route = useRoute();
@@ -20,22 +22,37 @@ const QrResult = () => {
 
   useEffect(() => {
     setLoading(true);
-    
-    // Assuming _get already returns the JSON data
-    _get(`vehicles?query_type=verify&plate_no=${plate_no}`)
-      .then((response) => {
-        setLoading(false);
-        if (response.success) {
-          setData(response.data);
-        } else {
-          Alert.alert('Error', 'Failed to fetch data');
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        Alert.alert('Error', 'An error occurred while fetching data');
-        setLoading(false);
-      });
+     _get(
+       `vehicles?query_type=verify&plate_no=${plate_no}`,
+       (resp) => {
+         console.log(resp);
+         setData(resp.data);
+         if (resp.sucess) {
+           
+         } else {
+           Alert.alert("Error", "Failed to fetch data");
+         }
+         setLoading(false);
+       },
+       (err) => {
+         console.log(err);
+       }
+     );
+    // fetch(`http:192.168.1.112:44405/vehicles?query_type=verify&plate_no=${plate_no}`)
+    //   .then((response) => response.json())
+    //   .then((response) => {
+    //     setLoading(false);
+    //     if (response.success) {
+    //       setData(response.data);
+    //     } else {
+    //       Alert.alert('Error', 'Failed to fetch data');
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.error(err);
+    //     setLoading(false);
+    //   });
+      // 20000
   }, [plate_no]);
 
   if (loading) {
@@ -49,7 +66,7 @@ const QrResult = () => {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={handleBackClick} style={styles.backButton}>
-        <Text style={styles.backText}>{'<'} Back</Text>
+        <Text style={styles.backText}>{"<"} Back</Text>
       </TouchableOpacity>
 
       {data && data.length > 0 ? (  // Ensure data exists and has items
@@ -57,20 +74,48 @@ const QrResult = () => {
           <Text style={styles.verifiedText}>✅ VERIFIED</Text>
           <View style={styles.row}>
             <Text style={styles.infoTitle}>PIN:</Text>
-            <Text style={styles.infoData}>{data[0]?.pin?.toUpperCase() || 'N/A'}</Text>
+            <Text style={styles.infoData}>
+              {data[0]?.pin?.toUpperCase() || "N/A"}
+            </Text>
           </View>
           <View style={styles.row}>
             <Text style={styles.infoTitle}>VEHICLE MAKE:</Text>
-            <Text style={styles.infoData}>{data[0]?.vehicle_make?.toUpperCase() || 'N/A'}</Text>
+            <Text style={styles.infoData}>
+              {data[0]?.vehicle_make?.toUpperCase() || "N/A"}
+            </Text>
           </View>
           <View style={styles.row}>
             <Text style={styles.infoTitle}>PLATE NUMBER:</Text>
-            <Text style={styles.infoData}>{data[0]?.plate_no?.toUpperCase() || 'N/A'}</Text>
+            <Text style={styles.infoData}>
+              {data[0]?.plate_no?.toUpperCase() || "N/A"}
+            </Text>
           </View>
+
+          {/* <View style={styles.row}>
+  <Text style={styles.infoTitle}>BALANCE:</Text>
+  <Text style={styles.infoData}>
+    {data[0]?.balance ? data[0]() : 'N/A'}
+  </Text>
+</View> */}
+
           <View style={styles.row}>
             <Text style={styles.infoTitle}>EXPIRY DATE:</Text>
             <Text style={styles.infoData}>
-              {data[0]?.expiry_date ? moment(data[0].expiry_date).format('YYYY-MM-DD') : 'N/A'}
+              {data[0]?.expiry_date
+                ? moment(data[0].expiry_date).format("YYYY-MM-DD")
+                : "N/A"}
+            </Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.infoTitle}>TOTAL LIABILITY:</Text>
+            <Text style={styles.infoData}>
+              {separator(data[0]?.liability) || "N/A"}
+            </Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.infoTitle}>LAST TRANSACTION:</Text>
+            <Text style={styles.infoData}>
+              {data[0]?.last_transaction_date?.toUpperCase() || "N/A"}
             </Text>
           </View>
         </View>
@@ -81,15 +126,14 @@ const QrResult = () => {
       )}
 
       <View style={styles.footer}>
-        <View style={styles.footerItem}>
+        {/* <View style={styles.footerItem}>
           <Image source={keke} style={styles.footerLogo} />
           <Text>POWERED BY</Text>
           <Text>KEKE NAPEP</Text>
-        </View>
+        </View> */}
         <View style={styles.footerItem}>
           <Image source={brainstormLogo} style={styles.footerLogo} />
-          <Text>DEVELOPED BY</Text>
-          <Text>BRAINSTORM IT SOLUTIONS</Text>
+          
         </View>
       </View>
     </View>
@@ -148,14 +192,14 @@ const styles = StyleSheet.create({
   },
   footer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'end',
     marginTop: 20,
   },
   footerItem: {
     alignItems: 'center',
   },
   footerLogo: {
-    width: 50,
+    width: 80,
     height: 50,
     marginBottom: 5,
   },

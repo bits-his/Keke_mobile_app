@@ -1,5 +1,5 @@
 import { Stack } from "expo-router";
-import { Provider } from "./context/Context";
+import { Provider } from "../context/Context";
 
 export default function RootLayout() {
   return (
@@ -48,10 +48,10 @@ export default function RootLayout() {
           name="main-body/DashBoard"
           options={{ title: "", headerShown: false }}
         />
-      <Stack.Screen
-        name="TransactionTable"
-        options={{ title: "", headerTransparent: true }}
-      />
+        <Stack.Screen
+          name="TransactionTable"
+          options={{ title: "", headerTransparent: true }}
+        />
       </Stack>
     </Provider>
   );

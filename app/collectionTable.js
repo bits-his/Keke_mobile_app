@@ -1,4 +1,4 @@
-import React, { useState,useCallback,useEffect, useContext } from "react";
+import React, { useState, useCallback, useEffect, useContext } from "react";
 import {
     View,
     Text,
@@ -6,77 +6,84 @@ import {
     TextInput,
     Button,
     StyleSheet,
+    TouchableOpacity,
 } from "react-native";
 import { _get } from "./Helper";
 import DateTimePicker from "@react-native-community/datetimepicker"; // For selecting date range
-import { AuthContext } from "./context/Context";
+import { useNavigation } from "@react-navigation/native";
+import { AuthContext } from "../context/Context";
 
 export default function collectionTable() {
+    const navigation = useNavigation()
     const [search, setSearch] = useState("");
     const [data, setData] = useState([]);
-    const {user} = useContext(AuthContext)
+    const { user } = useContext(AuthContext)
 
 
-      useEffect(() => {
-       _get(`vehicles?query_type=select&owner_id=${user.account_id}`, (resp) => {
-         if (resp.success && resp.data) {
-           setData(resp.data);
-           console.log(resp.data)
-        //    setVehicleCount(resp.data[0].vehicle_count);
-         }
-       });
-      }, []);
+    useEffect(() => {
+        _get(`vehicles?query_type=select&owner_id=${user.account_id}`, (resp) => {
+            if (resp.success && resp.data) {
+                setData(resp.data);
+                console.log(resp.data)
+                //    setVehicleCount(resp.data[0].vehicle_count);
+            }
+        });
+    }, []);
+    const filterData = data.filter(item => item.vehicle_id.toLowerCase().includes(search.toLowerCase()) || item.plate_no.toLowerCase().includes(search.toLowerCase()))
 
-    // Filters the data within the date range
-      const renderTableHeader = () => (
+    const renderTableHeader = () => (
         <View style={styles.tableHeader}>
-          <Text style={styles.tableHeaderText}>Vehicle Id</Text>
-          <Text style={styles.tableHeaderText}>Plate No</Text>
-          <Text style={styles.tableHeaderText}>balance</Text>
+            <Text style={styles.tableHeaderText}>Vehicle Id</Text>
+            <Text style={styles.tableHeaderText}>Plate No</Text>
+            <Text style={styles.tableHeaderText}>balance</Text>
+            <Text style={styles.tableHeaderText}>Action</Text>
         </View>
-      );
+    );
 
-      const renderTableRow = ({ item }) => (
+    const renderTableRow = ({ item }) => (
         <View style={styles.tableRow}>
-          <Text style={styles.tableCell}>{item.vehicle_id}</Text>
-          <Text style={styles.tableCell}>{item.plate_no}</Text>
-          <Text style={styles.tableCell}>{item.balance}</Text>
+            <Text style={styles.tableCell}>{item.vehicle_id}</Text>
+            <Text style={styles.tableCell}>{item.plate_no}</Text>
+            <Text style={styles.tableCell}>{item.balance}</Text>
+            <TouchableOpacity style={styles.button1} onPress={() => navigation.navigate("TopupWallet")}>
+                <Text style={styles.buttonText}>Top Up</Text>
+            </TouchableOpacity>
         </View>
-      );
+    );
 
 
     return (
-      <View style={styles.container}>
-        <View style={styles.headerDashboard}>
-          <Text style={styles.headerText}>My Total Collection</Text>
-        </View>
-        <View style={{ flexDirection: "row" }}>
-          <TextInput
-            style={styles.input}
-            placeholder="Search"
-            keyboardType="email-address"
-            value={search}
-            onChangeText={(text) => setSearch("search", text)}
-          />
-          <Text style={styles.button}>Search</Text>
-        </View>
-        <View style={{ margin: 10 }}>
-         
-    
-          <FlatList
-            data={data}
-            keyExtractor={(item) => item.id}
-            ListHeaderComponent={renderTableHeader}
-            renderItem={renderTableRow}
-          />
+        <View style={styles.container}>
+            <View style={styles.headerDashboard}>
+                <Text style={styles.headerText}>My Total Collection</Text>
+            </View>
+            <View style={{ flexDirection: "row" }}>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Search"
+                    keyboardType="email-address"
+                    value={search}
+                    onChangeText={setSearch}
+                />
+                <Text style={styles.button}>Search</Text>
+            </View>
+            <View style={{ margin: 10 }}>
 
-          <View>
+
+                <FlatList
+                    data={filterData}
+                    keyExtractor={(item) => item.id}
+                    ListHeaderComponent={renderTableHeader}
+                    renderItem={renderTableRow}
+                />
+
+                {/* <View>
             <Text style={styles.noDataText}>
               No data available for the selected date range.
-            </Text>
-          </View>
+            </Text> */}
+                {/* </View> */}
+            </View>
         </View>
-      </View>
     );
 }
 
@@ -117,7 +124,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         padding: 10,
-        backgroundColor: "#fff",
+        backgroundColor: "#d9d9d9",
         borderBottomWidth: 1,
         borderColor: "#ccc",
     },
@@ -155,4 +162,14 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 5,
         borderTopRightRadius: 5,
     },
+    button1: {
+        backgroundColor: "#f5c005",
+        padding: 8,
+        borderRadius: 10,
+    },
+    buttonText: {
+        color: 'white',
+        textAlign: 'center',
+        fontSize: 11
+    }
 });

@@ -12,13 +12,14 @@ import { useNavigation } from "@react-navigation/native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
-import { AuthContext } from "../context/Context";
+import { AuthContext } from "../../context/Context";
 import { _get, separator } from "../Helper";
 
 export default function DashBoard({ navigation }) {
   const { user, setUser, token, setToken } = useContext(AuthContext);
   const [balance, setBalance] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [vehicle_no, setVehicle_no] = useState("");
   const navigate = useNavigation();
 
   const getBalance = useCallback(() => {
@@ -36,6 +37,17 @@ export default function DashBoard({ navigation }) {
   useEffect(() => {
     getBalance();
   }, [showPassword]);
+
+  useEffect(() => {
+    _get(`vehicles?query_type=select&owner_id=${user.account_id}`, (resp) => {
+      if (resp.success && resp.data) {
+        // setData(resp.data);
+        console.log(resp.data)
+        setVehicle_no(resp.data[0].vehicle_count);
+        console.log("hgzjhfgasjhghjsd", vehicle_no);
+      }
+    });
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -79,20 +91,31 @@ export default function DashBoard({ navigation }) {
               )}
             </View>
           </View>
-          <View style={styles.button}>
-            <Link
-              as={TouchableOpacity}
-              href={""}
+          {/* <View style={styles.button}> */}
+          <View style={styles.accountBalanceText1}>
+            <View
               style={{
-                textAlign: "center",
-                color: "#f5c005",
-                fontWeight: "bold",
-                textTransform: "capitalize",
-                width: "65%",
+                width: "100%",
+                flexDirection: "row",
+                justifyContent: "center",
               }}
             >
-              add fund
-            </Link>
+              <Text style={styles.balance}>Total No. Vehicles</Text>
+              <TouchableOpacity
+                style={styles.icon}
+                onPress={() => setShowPassword(!showPassword)}
+              >
+              </TouchableOpacity>
+            </View>
+            <Text
+              style={{
+                fontSize: 25,
+                textAlign: "center",
+                color: "#FFF",
+              }}
+            >
+              {vehicle_no}
+            </Text>
           </View>
         </View>
         <View style={{ flexDirection: "row", width: "100%", marginTop: 30 }}>
@@ -109,8 +132,8 @@ export default function DashBoard({ navigation }) {
               <Text style={styles.CardText}>My Transaction</Text>
             </Link>
           </View>
-          <View style={styles.cards}>
-            <Link as={TouchableOpacity} href={"/collectionTable"}>
+          {/* <View style={styles.cards}>
+            <Link as={TouchableOpacity} href={"/TopupWallet"}>
               <AntDesign
                 name="creditcard"
                 style={styles.icon}
@@ -118,12 +141,25 @@ export default function DashBoard({ navigation }) {
                 color="#f5c005"
               />
             </Link>
-            <Link as={TouchableOpacity} href={"/searchVehicles"}>
+            <Link as={TouchableOpacity} href={"/TopupWallet"}>
               <Text style={styles.CardText}>Top Up</Text>
+            </Link>
+          </View> */}
+          <View style={styles.cards}>
+            <Link as={TouchableOpacity} href={"/collectionTable"}>
+              <FontAwesome
+                style={styles.icon}
+                name="truck"
+                size={80}
+                color="#f5c005"
+              />
+            </Link>
+            <Link as={TouchableOpacity} href={"/collectionTable"}>
+              <Text style={styles.CardText}>My Vehicle</Text>
             </Link>
           </View>
         </View>
-        <View style={{ flexDirection: "row", width: "100%" }}>
+        {/* <View style={{ flexDirection: "row", width: "100%" }}>
           <View style={styles.cards}>
             <Link as={TouchableOpacity} href={"/collectionTable"}>
               <FontAwesome
@@ -150,7 +186,7 @@ export default function DashBoard({ navigation }) {
               <Text style={styles.CardText}>Fund Vehicle</Text>
             </Link>
           </View>
-        </View>
+        </View> */}
         <View style={{ flexDirection: "row", width: "100%" }}>
           {/* <View style={styles.cards}>
             <Link as={TouchableOpacity} href={"/collectionTable"}>
@@ -177,7 +213,7 @@ const styles = StyleSheet.create({
   },
   headerDashboard: {
     backgroundColor: "#f5c005",
-    height: 220,
+    height: 200,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
     marginBottom: 60,
@@ -187,7 +223,7 @@ const styles = StyleSheet.create({
   headerText: {
     textAlign: "center",
     fontSize: 20,
-    marginTop: 70,
+    marginTop: 40,
     marginBottom: 20,
     color: "white",
     fontWeight: "bold",
@@ -207,6 +243,7 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     elevation: 20,
     height: 170,
+    marginTop: 120
   },
   icon: {
     marginLeft: 10,
@@ -224,6 +261,10 @@ const styles = StyleSheet.create({
   accountBalanceText: {
     flexDirection: "column",
     width: "100%",
+  },
+  accountBalanceText1: {
+    flexDirection: "column",
+    width: "50%",
   },
   balance: {
     fontSize: 16,
