@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import { useNavigation } from '@react-navigation/native';
+
+const { width } = Dimensions.get('window');
+const qrSize = width * 0.7;
 
 const QrScan = () => {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
-  const [scannedData, setScannedData] = useState('');
+  const navigation = useNavigation();
 
   useEffect(() => {
     (async () => {
@@ -16,8 +20,19 @@ const QrScan = () => {
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    setScannedData(data);
-    alert(`QR Code with type ${type} and data ${data} has been scanned!`);
+    try {
+      const url = new URL(data);
+      const plate_no = new URLSearchParams(url.search).get('plate_no');
+
+      if (plate_no) {
+        navigation.navigate('QrResult', { plate_no });
+      } else {
+        alert('Invalid QR code: No plate number found.');
+      }
+    } catch (error) {
+      alert('Invalid QR code format.');
+      console.error(error);
+    }
   };
 
   if (hasPermission === null) {
@@ -29,24 +44,24 @@ const QrScan = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.scannerWrapper}>
-        <View style={styles.frame}>
-          {!scanned ? (
-            <BarCodeScanner
-              onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-              style={styles.scanner}
-            />
-          ) : (
-            <View style={styles.scannedResult}>
-              <Text>Scanned Data: {scannedData}</Text>
-              <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />
-            </View>
-          )}
-          <View style={[styles.edge, styles.topLeft]} />
-          <View style={[styles.edge, styles.topRight]} />
-          <View style={[styles.edge, styles.bottomLeft]} />
-          <View style={[styles.edge, styles.bottomRight]} />
+      <BarCodeScanner
+        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+        style={StyleSheet.absoluteFillObject}
+      />
+      <View style={styles.overlay}>
+        <View style={styles.scanArea}>
+          <View style={styles.scanFrame} />
         </View>
+
+        {!scanned && (
+          <Text style={styles.instructionText}>Align the QR code within the frame</Text>
+        )}
+
+        {scanned && (
+          <TouchableOpacity onPress={() => setScanned(false)} style={styles.rescanButton}>
+            <Text style={styles.rescanText}>Tap to scan again</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -55,60 +70,45 @@ const QrScan = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#f5c005',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  scannerWrapper: {
-    width: 250, 
-    height: 250,
+  overlay: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  scanner: {
+  scanArea: {
     width: '100%',
     height: '100%',
-  },
-  frame: {
-    position: 'relative',
-    width: 250, 
-    height: 250,
-    borderRadius: 10,
-    overflow: 'hidden',
-  },
-  edge: {
-    position: 'absolute',
-    width: 30,
-    height: 30,
-    borderColor: '#f5c005',
-    borderWidth: 4,
-  },
-  topLeft: {
-    top: 0,
-    left: 0,
-    borderTopWidth: 4,
-    borderLeftWidth: 4,
-  },
-  topRight: {
-    top: 0,
-    right: 0,
-    borderTopWidth: 4,
-    borderRightWidth: 4,
-  },
-  bottomLeft: {
-    bottom: 0,
-    left: 0,
-    borderBottomWidth: 4,
-    borderLeftWidth: 4,
-  },
-  bottomRight: {
-    bottom: 0,
-    right: 0,
-    borderBottomWidth: 4,
-    borderRightWidth: 4,
-  },
-  scannedResult: {
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  scanFrame: {
+    width: qrSize,
+    height: qrSize,
+    borderWidth: 4,
+    borderColor: '#f5c005',
+    borderRadius: 10,
+  },
+  instructionText: {
+    color: '#f5c005',
+    fontSize: 18,
+    textAlign: 'center',
+    marginTop: 30,
+  },
+  rescanButton: {
+    position: 'absolute',
+    bottom: 50,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: '#f5c005',
+    borderRadius: 10,
+  },
+  rescanText: {
+    color: '#000',
+    fontSize: 16,
   },
 });
 

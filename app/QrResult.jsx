@@ -21,7 +21,7 @@ const QrResult = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http:192.168.1.112:44405/vehicles?query_type=verify&plate_no=kmc24efesd`)
+    fetch(`http:192.168.1.112:44405/vehicles?query_type=verify&plate_no=${plate_no}`)
       .then((response) => response.json())
       .then((response) => {
         setLoading(false);
@@ -35,12 +35,13 @@ const QrResult = () => {
         console.error(err);
         setLoading(false);
       });
+      20000
   }, [plate_no]);
 
   if (loading) {
     return (
       <View style={styles.centeredView}>
-        <ActivityIndicator size="large" color="#00ff00" />
+        <ActivityIndicator size="large" color="#f5c005" />
       </View>
     );
   }
@@ -107,7 +108,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     marginBottom: 20,
-    backgroundColor: '#28a745',
+    backgroundColor: '#f5c005',
     padding: 10,
     borderRadius: 5,
   },
@@ -126,7 +127,7 @@ const styles = StyleSheet.create({
   },
   verifiedText: {
     fontSize: 24,
-    color: '#28a745',
+    color: '#f5c005',
     textAlign: 'center',
     marginBottom: 20,
     fontWeight: 'bold',

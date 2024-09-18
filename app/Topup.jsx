@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native'; // Import Alert
 import moment from 'moment';
+import { SafeAreaView } from 'react-native-safe-area-context'; // Import SafeAreaView
 
 const Topup = () => {
   const [selectedOption, setSelectedOption] = useState('vehicle');
@@ -110,7 +111,6 @@ const Topup = () => {
     }
   };
 
-  // Handle form submission
   const handleSubmit = async () => {
     const amount = selectedOption === 'vehicle' ? vehicleAmount : ownerAmount;
     const destinationId = selectedOption === 'vehicle' ? vehicleNumber : ownerNumber;
@@ -137,8 +137,7 @@ const Topup = () => {
       });
 
       if (response.ok) {
-        console.log('Topup successful');
-        // Reset the form
+        Alert.alert('Success', '✅Topup successful', [{ text: 'OK' }]);
         setVehicleNumber('');
         setPlateNumber('');
         setOwnerNumber('');
@@ -148,15 +147,16 @@ const Topup = () => {
         setVehicleError('');
         setSelectedOption('vehicle');
       } else {
-        console.log('Error during topup');
+        Alert.alert('Error', 'Topup failed. Please try again.', [{ text: 'OK' }]);
       }
     } catch (error) {
       console.error('Error submitting topup:', error);
+      Alert.alert('Error', 'There was an issue submitting the topup. Please try again later.', [{ text: 'OK' }]);
     }
   };
 
   return (
-    <View style={styles.containHeader}>
+    <SafeAreaView style={styles.containHeader}>
       <Text style={styles.text}>TOP UP</Text>
       <View style={styles.container}>
         <View style={styles.card}>
@@ -218,7 +218,7 @@ const Topup = () => {
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
