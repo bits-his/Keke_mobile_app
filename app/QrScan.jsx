@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
 const qrSize = width * 0.7;
+const qrBlur = width * 0.5;
 
 const QrScan = () => {
   const [hasPermission, setHasPermission] = useState(null);
@@ -36,7 +37,7 @@ const QrScan = () => {
   };
 
   if (hasPermission === null) {
-    return <Text>Requesting for camera permission...</Text>;
+    return <Text>Requesting camera permission...</Text>;
   }
   if (hasPermission === false) {
     return <Text>No access to camera</Text>;
@@ -49,13 +50,20 @@ const QrScan = () => {
         style={StyleSheet.absoluteFillObject}
       />
       <View style={styles.overlay}>
-        <View style={styles.scanArea}>
-          <View style={styles.scanFrame} />
+        {/* Top */}
+        <View style={[styles.blur, { height: (width - qrBlur) / 1, width: '100%' }]} />
+
+        <View style={{ flexDirection: 'row' }}>
+          <View style={[styles.blur, { width: (width - qrSize) / 2, height: qrSize }]} />
+          <View style={styles.scanArea}>
+            <View style={styles.scanFrame} />
+            <Text style={styles.instructionText}>Align the QR code within the frame</Text>
+          </View>
+          <View style={[styles.blur, { width: (width - qrSize) / 2, height: qrSize }]} />
         </View>
 
-        {!scanned && (
-          <Text style={styles.instructionText}>Align the QR code within the frame</Text>
-        )}
+        {/* Bottom */}
+        <View style={[styles.blur, { height: (width - qrBlur) / 1, width: '100%' }]} />
 
         {scanned && (
           <TouchableOpacity onPress={() => setScanned(false)} style={styles.rescanButton}>
@@ -70,18 +78,16 @@ const QrScan = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5c005',
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#f5c005',
   },
   overlay: {
-    flex: 1,
+    ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
     alignItems: 'center',
   },
   scanArea: {
-    width: '100%',
-    height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -92,11 +98,15 @@ const styles = StyleSheet.create({
     borderColor: '#f5c005',
     borderRadius: 10,
   },
+  blur: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
   instructionText: {
     color: '#f5c005',
     fontSize: 18,
     textAlign: 'center',
-    marginTop: 30,
+    marginTop: 10,
+    zIndex: 1,
   },
   rescanButton: {
     position: 'absolute',

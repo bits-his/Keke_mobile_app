@@ -67,10 +67,13 @@ const QrResult = () => {
             <Text style={styles.infoTitle}>PLATE NUMBER:</Text>
             <Text style={styles.infoData}>{data[0]?.plate_no?.toUpperCase() || 'N/A'}</Text>
           </View>
-          <View style={styles.row}>
-            <Text style={styles.infoTitle}>BALANCE:</Text>
-            <Text style={styles.infoData}>{data[0]?.plate_no?.toUpperCase() || 'N/A'}</Text>
-          </View>
+          {/* <View style={styles.row}>
+  <Text style={styles.infoTitle}>BALANCE:</Text>
+  <Text style={styles.infoData}>
+    {data[0]?.balance ? data[0]() : 'N/A'}
+  </Text>
+</View> */}
+
           <View style={styles.row}>
             <Text style={styles.infoTitle}>EXPIRY DATE:</Text>
             <Text style={styles.infoData}>
