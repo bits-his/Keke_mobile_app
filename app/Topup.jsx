@@ -146,6 +146,7 @@ const Topup = () => {
   };
 
   const handleSubmit = async () => {
+    console.log("owner")
     const amount = selectedOption === "vehicle" ? vehicleAmount : ownerAmount;
     const destinationId =
       selectedOption === "vehicle" ? vehicleNumber : ownerNumber;
