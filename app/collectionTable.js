@@ -45,7 +45,7 @@ export default function collectionTable() {
             <Text style={styles.tableCell}>{item.vehicle_id}</Text>
             <Text style={styles.tableCell}>{item.plate_no}</Text>
             <Text style={styles.tableCell}>{item.balance}</Text>
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("TopupWallet")}>
+            <TouchableOpacity style={styles.button1} onPress={() => navigation.navigate("TopupWallet")}>
                 <Text style={styles.buttonText}>Top Up</Text>
             </TouchableOpacity>
         </View>
@@ -150,6 +150,19 @@ const styles = StyleSheet.create({
         // borderRadius: 5
     },
     button: {
+        backgroundColor: "#f5c005",
+        padding: 8,
+        width: "20%",
+        alignItems: "center",
+        color: 'white',
+        textAlign: 'center',
+        fontSize: 18,
+        marginTop: 7,
+        height: 40,
+        borderBottomRightRadius: 5,
+        borderTopRightRadius: 5,
+    },
+    button1: {
         backgroundColor: "#f5c005",
         padding: 8,
         borderRadius: 10,
