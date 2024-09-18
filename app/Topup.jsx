@@ -6,9 +6,9 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
-} from "react-native"; // Import Alert
+} from "react-native";
 import moment from "moment";
-import { SafeAreaView } from "react-native-safe-area-context"; // Import SafeAreaView
+import { SafeAreaView } from "react-native-safe-area-context";
 import { _get, _post } from "./Helper";
 import { AuthContext } from "../context/Context";
 
@@ -55,31 +55,31 @@ const Topup = () => {
   // Fetch vehicle data
 
   // Fetch owner data
-  const fetchOwnerData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(
-        "http://192.168.1.112:44405/vehicle-owners?query_type=select-all"
-      );
-      const respData = await response.json();
+  // const fetchOwnerData = useCallback(async () => {
+  //   setLoading(true);
+  //   try {
+  //     const response = await fetch(
+  //       "http://192.168.1.112:44405/vehicle-owners?query_type=select-all"
+  //     );
+  //     const respData = await response.json();
 
-      if (response.ok) {
-        const formattedData = respData.data.map((owner) => ({
-          account_id: owner.account_id,
-          name: owner.name,
-        }));
-        setOwnerData(formattedData);
-      } else {
-        console.error("Error fetching owner data");
-        setOwnerData([]);
-      }
-    } catch (error) {
-      console.error("Error fetching owner data:", error);
-      setOwnerData([]);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  //     if (response.ok) {
+  //       const formattedData = respData.data.map((owner) => ({
+  //         account_id: owner.account_id,
+  //         name: owner.name,
+  //       }));
+  //       setOwnerData(formattedData);
+  //     } else {
+  //       console.error("Error fetching owner data");
+  //       setOwnerData([]);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching owner data:", error);
+  //     setOwnerData([]);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }, []);
   const fetchOwnerData1 = useCallback(async () => {
     setLoading(true);
     _get(
