@@ -41,6 +41,7 @@ const TopupWallet = () => {
     <View style={styles.containHeader}>
       <Text style={styles.text}>Top Up Wallet</Text>
       <View style={styles.container}>
+      {/* <View style={styles.container}> */}
         <View style={styles.card}>
           <View style={styles.buttonGroup}>
             {/* <TouchableOpacity
