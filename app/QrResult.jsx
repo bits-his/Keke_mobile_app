@@ -14,13 +14,14 @@ const QrResult = () => {
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
 
+
   const handleBackClick = () => {
     navigation.goBack();
   };
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http:192.168.1.112:44405/vehicles?query_type=verify&plate_no=kmc24efesd`)
+    fetch(`http:192.168.1.112:44405/vehicles?query_type=verify&plate_no=${plate_no}`)
       .then((response) => response.json())
       .then((response) => {
         setLoading(false);
@@ -34,12 +35,13 @@ const QrResult = () => {
         console.error(err);
         setLoading(false);
       });
+      20000
   }, [plate_no]);
 
   if (loading) {
     return (
       <View style={styles.centeredView}>
-        <ActivityIndicator size="large" color="#00ff00" />
+        <ActivityIndicator size="large" color="#f5c005" />
       </View>
     );
   }
@@ -65,10 +67,13 @@ const QrResult = () => {
             <Text style={styles.infoTitle}>PLATE NUMBER:</Text>
             <Text style={styles.infoData}>{data[0]?.plate_no?.toUpperCase() || 'N/A'}</Text>
           </View>
-          <View style={styles.row}>
-            <Text style={styles.infoTitle}>BALANCE:</Text>
-            <Text style={styles.infoData}>{data[0]?.plate_no?.toUpperCase() || 'N/A'}</Text>
-          </View>
+          {/* <View style={styles.row}>
+  <Text style={styles.infoTitle}>BALANCE:</Text>
+  <Text style={styles.infoData}>
+    {data[0]?.balance ? data[0]() : 'N/A'}
+  </Text>
+</View> */}
+
           <View style={styles.row}>
             <Text style={styles.infoTitle}>EXPIRY DATE:</Text>
             <Text style={styles.infoData}>
@@ -106,7 +111,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     marginBottom: 20,
-    backgroundColor: '#28a745',
+    backgroundColor: '#f5c005',
     padding: 10,
     borderRadius: 5,
   },
@@ -125,7 +130,7 @@ const styles = StyleSheet.create({
   },
   verifiedText: {
     fontSize: 24,
-    color: '#28a745',
+    color: '#f5c005',
     textAlign: 'center',
     marginBottom: 20,
     fontWeight: 'bold',
