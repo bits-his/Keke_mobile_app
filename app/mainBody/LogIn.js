@@ -39,11 +39,7 @@ export default function SignIn() {
           setUser(data.user);
           setToken(data.token);
           console.log(data);
-          if (data.user.account_type === "vehicle_owner") {
-            navigation.navigate("main-body/DashBoard");
-          } else {
-            navigation.navigate("dashboard");
-          }
+          navigation.navigate("dashboard");
         } else {
           console.log(data);
           setError(data);
@@ -111,7 +107,6 @@ export default function SignIn() {
         {/* <Link as={TouchableOpacity} style={styles.button} href={"/dashboard"}>
           Submit
         </Link> */}
-        {/* <Link as={TouchableOpacity} style={styles.button} href={"/TransactionTable"}>Submit</Link> */}
       </View>
     </View>
   );

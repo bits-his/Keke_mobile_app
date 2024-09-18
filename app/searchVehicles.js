@@ -8,13 +8,16 @@ import {
 } from "react-native";
 import { _get } from "./Helper";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { Link } from "expo-router";
+import { Link, useNavigation } from "expo-router";
 
 const SearchVehicles = () => {
-  const [vehicle_no, setVehicle_no] = useState("");
+  const [plate_no, setPlate_no] = useState("");
+  const navigation = useNavigation()
 
   const handleSubmit = () => {
-    console.log(`Vehicle Number: ${vehicle_no}`);
+    console.log(`Vehicle Number: ${plate_no}`);
+             navigation.navigate("QrResult", { plate_no });
+   
   };
   const getName = useCallback(() => {
     fetch(`http://localhost:44405/superagent?query_type=select&id=""`)
@@ -41,14 +44,14 @@ const SearchVehicles = () => {
       <View style={styles.container}>
         <View style={styles.card}>
           <View style={styles.inputContainer}>
-            <Text>Password</Text>
+            <Text>Plate No</Text>
             <View style={styles.inputData}>
               <View style={styles.passwordContainer}>
                 <TextInput
                   style={[styles.input1, styles.passwordInput]}
                   placeholder="Enter Vehicle Number or Chasis Number"
-                  value={vehicle_no}
-                  onChangeText={(text) => setVehicle_no("vehicle_no", text)}
+                  value={plate_no}
+                  onChangeText={(text) => setPlate_no (text)}
                 />
                 <Link
                   style={styles.icon}

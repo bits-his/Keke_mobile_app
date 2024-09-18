@@ -10,8 +10,8 @@ import {
 } from "react-native";
 import { _get } from "./Helper";
 import DateTimePicker from "@react-native-community/datetimepicker"; // For selecting date range
-import { AuthContext } from "./context/Context";
 import { useNavigation } from "@react-navigation/native";
+import { AuthContext } from "../context/Context";
 
 export default function collectionTable() {
     const navigation = useNavigation()
