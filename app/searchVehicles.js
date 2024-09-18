@@ -1,39 +1,58 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Alert
 } from "react-native";
-import { _get } from "./Helper";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { useNavigation } from '@react-navigation/native';
+import { _get } from "./Helper";  // Assuming _get fetches data from your backend
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 
 const SearchVehicles = () => {
   const [vehicle_no, setVehicle_no] = useState("");
+  const [vehiclesData, setVehiclesData] = useState([]);
+  const navigation = useNavigation();
 
-  const handleSubmit = () => {
-    console.log(`Vehicle Number: ${vehicle_no}`);
-  };
-  const getName = useCallback(() => {
-    fetch(`http://localhost:44405/superagent?query_type=select&id=""`)
-      .then((raw) => raw.json())
-      .then((result) => {
-        console.log(result);
-      })
-      .catch((err) => {
-        error(err);
-      });
-  }, []);
+  // Fetch all vehicle data on component mount
   useEffect(() => {
-    _get(`superagent?query_type=select&id=""`, (resp) => {
-      console.log(resp);
+    _get(`vehicles?query_type=select-all`, (resp) => {
+      if (resp.success) {
+        console.log("Fetched vehicles:", resp.data); // Log the fetched data
+        setVehiclesData(resp.data); // Store the list of vehicles
+      } else {
+        Alert.alert('Error', 'Failed to load vehicles');
+      }
     });
     return () => {
       console.log("Cleanup on unmount");
     };
   }, []);
+
+  const handleSubmit = () => {
+    // Trim input to avoid leading/trailing spaces
+    const inputVehicleNo = vehicle_no.trim();
+
+    // Search for the vehicle ID or chassis number in the fetched data
+    const foundVehicle = vehiclesData.find(
+      vehicle =>
+        vehicle.vehicle_id.toLowerCase() === inputVehicleNo.toLowerCase() || 
+        vehicle.chasis_no.toLowerCase() === inputVehicleNo.toLowerCase()
+    );
+
+    if (foundVehicle) {
+      // Log the found vehicle details for debugging
+      console.log("Found vehicle:", foundVehicle);
+
+      // Navigate to the QrResult component with the found vehicle's plate number
+      navigation.navigate('QrResult', { plate_no: foundVehicle.plate_no });
+    } else {
+      Alert.alert("No vehicle found", "Please enter a valid Vehicle ID or Chassis Number.");
+    }
+  };
 
   return (
     <View style={styles.containHeader}>
@@ -41,14 +60,14 @@ const SearchVehicles = () => {
       <View style={styles.container}>
         <View style={styles.card}>
           <View style={styles.inputContainer}>
-            <Text>Password</Text>
+            <Text>Search For Vehicle</Text>
             <View style={styles.inputData}>
               <View style={styles.passwordContainer}>
                 <TextInput
                   style={[styles.input1, styles.passwordInput]}
-                  placeholder="Enter Vehicle Number or Chasis Number"
+                  placeholder="Enter Vehicle ID or Chassis Number"
                   value={vehicle_no}
-                  onChangeText={(text) => setVehicle_no("vehicle_no", text)}
+                  onChangeText={setVehicle_no} // Update the state with the input value
                 />
                 <Link
                   style={styles.icon}

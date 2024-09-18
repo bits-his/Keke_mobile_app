@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, ActivityIndicator, Alert } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import moment from 'moment';
-// import QrScan from './QrScan';
+import { _get } from './Helper'; // Assuming this is your fetch helper
 
 const keke = require('../assets/images/keke_napep.png');
 const brainstormLogo = require('../assets/images/logo.png');
@@ -10,10 +10,9 @@ const brainstormLogo = require('../assets/images/logo.png');
 const QrResult = () => {
   const route = useRoute();
   const { plate_no } = route.params;
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(null);  // Default to null to check existence
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
-
 
   const handleBackClick = () => {
     navigation.goBack();
@@ -21,8 +20,9 @@ const QrResult = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http:192.168.1.112:44405/vehicles?query_type=verify&plate_no=${plate_no}`)
-      .then((response) => response.json())
+    
+    // Assuming _get already returns the JSON data
+    _get(`vehicles?query_type=verify&plate_no=${plate_no}`)
       .then((response) => {
         setLoading(false);
         if (response.success) {
@@ -33,9 +33,9 @@ const QrResult = () => {
       })
       .catch((err) => {
         console.error(err);
+        Alert.alert('Error', 'An error occurred while fetching data');
         setLoading(false);
       });
-      20000
   }, [plate_no]);
 
   if (loading) {
@@ -52,7 +52,7 @@ const QrResult = () => {
         <Text style={styles.backText}>{'<'} Back</Text>
       </TouchableOpacity>
 
-      {data.length ? (
+      {data && data.length > 0 ? (  // Ensure data exists and has items
         <View style={styles.card}>
           <Text style={styles.verifiedText}>✅ VERIFIED</Text>
           <View style={styles.row}>
@@ -67,13 +67,6 @@ const QrResult = () => {
             <Text style={styles.infoTitle}>PLATE NUMBER:</Text>
             <Text style={styles.infoData}>{data[0]?.plate_no?.toUpperCase() || 'N/A'}</Text>
           </View>
-          {/* <View style={styles.row}>
-  <Text style={styles.infoTitle}>BALANCE:</Text>
-  <Text style={styles.infoData}>
-    {data[0]?.balance ? data[0]() : 'N/A'}
-  </Text>
-</View> */}
-
           <View style={styles.row}>
             <Text style={styles.infoTitle}>EXPIRY DATE:</Text>
             <Text style={styles.infoData}>
