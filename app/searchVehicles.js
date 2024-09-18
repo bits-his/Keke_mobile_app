@@ -66,7 +66,7 @@ const SearchVehicles = () => {
                         </View>
                     </View>
                     <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-                        <Text style={styles.submitButtonText}>Submit</Text>
+                        <Text style={styles.submitButtonText}>Search</Text>
                     </TouchableOpacity>
                 </View>
             </View>
