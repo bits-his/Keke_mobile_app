@@ -12,9 +12,9 @@ import { AuthContext } from "./context/Context";
 
 
 export const _post = (url, data, success = (f) => f, error = (f) => f) => {
-    const { token} = useContext(AuthContext);
+    const token = 'Bearer 2trhfsvyhjsgdvsh';
 
-  console.log(token);
+  // console.log(token);
   fetch(`${server_url}/${url}`, {
     method: "POST",
     headers: {

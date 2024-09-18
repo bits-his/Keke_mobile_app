@@ -4,7 +4,8 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import SignIn from "./mainBody/LogIn";
+import SignIn from "./Signin/LogIn";
+// import SignIn from "./Signin/LogIn";
 
 
 export default function index() {

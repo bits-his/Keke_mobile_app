@@ -1,4 +1,4 @@
-import React, { useState,useCallback,useEffect } from "react";
+import React, { useState,useCallback,useEffect, useContext } from "react";
 import {
     View,
     Text,
@@ -9,33 +9,23 @@ import {
 } from "react-native";
 import { _get } from "./Helper";
 import DateTimePicker from "@react-native-community/datetimepicker"; // For selecting date range
+import { AuthContext } from "./context/Context";
 
 export default function collectionTable() {
     const [search, setSearch] = useState("");
     const [data, setData] = useState([]);
+    const {user} = useContext(AuthContext)
 
-      const getReg = useCallback(() => {
-        // setLoading(true);
-        _get(`vehicles?query_type=select-all-vehicles`, (resp) => {
-          if (resp.success && resp.data) {
-            console.log(resp.data[0])
-            setData(resp.data);
-            // setLoading(false);
-            // console.log(resp);
-          }
-        });
-      }, []);
+
       useEffect(() => {
-      getReg()
+       _get(`vehicles?query_type=select&owner_id=${user.account_id}`, (resp) => {
+         if (resp.success && resp.data) {
+           setData(resp.data);
+           console.log(resp.data)
+        //    setVehicleCount(resp.data[0].vehicle_count);
+         }
+       });
       }, []);
-
-    // Example dummy data for the table
-    const sampleData = [
-        { id: 1, date: "2023-09-14", batchNo: "B-001", chassisNo: "CH-12345" },
-        { id: 2, date: "2023-09-15", batchNo: "B-002", chassisNo: "CH-12346" },
-        { id: 3, date: "2023-09-16", batchNo: "B-003", chassisNo: "CH-12347" },
-        { id: 4, date: "2023-09-17", batchNo: "B-004", chassisNo: "CH-12348" },
-    ];
 
     // Filters the data within the date range
       const renderTableHeader = () => (
