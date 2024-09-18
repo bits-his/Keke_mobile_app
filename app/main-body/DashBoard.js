@@ -12,7 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
-import { AuthContext } from "../context/Context";
+import { AuthContext } from "../../context/Context";
 import { _get, separator } from "../Helper";
 
 export default function DashBoard({ navigation }) {
@@ -109,8 +109,8 @@ export default function DashBoard({ navigation }) {
               <Text style={styles.CardText}>My Transaction</Text>
             </Link>
           </View>
-          <View style={styles.cards}>
-            <Link as={TouchableOpacity} href={"/collectionTable"}>
+          {/* <View style={styles.cards}>
+            <Link as={TouchableOpacity} href={"/TopupWallet"}>
               <AntDesign
                 name="creditcard"
                 style={styles.icon}
@@ -118,11 +118,25 @@ export default function DashBoard({ navigation }) {
                 color="#f5c005"
               />
             </Link>
-            <Link as={TouchableOpacity} href={"/searchVehicles"}>
+            <Link as={TouchableOpacity} href={"/TopupWallet"}>
               <Text style={styles.CardText}>Top Up</Text>
             </Link>
+          </View> */}
+          <View style={styles.cards}>
+            {/* <Link as={TouchableOpacity} href={"/collectionTable"}> */}
+            <AntDesign
+              name="bank"
+              style={styles.icon}
+              size={80}
+              color="#f5c005"
+            />
+            {/* </Link> */}
+            {/* <Link as={TouchableOpacity} href={"/searchVehicles"}> */}
+            <Text style={styles.CardText}>Fund Vehicle</Text>
+            {/* </Link> */}
           </View>
         </View>
+        <View style={{ flexDirection: "row", width: "100%" }}></View>
         <View style={{ flexDirection: "row", width: "100%" }}>
           <View style={styles.cards}>
             <Link as={TouchableOpacity} href={"/collectionTable"}>
@@ -137,21 +151,7 @@ export default function DashBoard({ navigation }) {
               <Text style={styles.CardText}>My Vehicle</Text>
             </Link>
           </View>
-          <View style={styles.cards}>
-            <Link as={TouchableOpacity} href={"/collectionTable"}>
-              <AntDesign
-                name="bank"
-                style={styles.icon}
-                size={80}
-                color="#f5c005"
-              />
-            </Link>
-            <Link as={TouchableOpacity} href={"/searchVehicles"}>
-              <Text style={styles.CardText}>Fund Vehicle</Text>
-            </Link>
-          </View>
-        </View>
-        <View style={{ flexDirection: "row", width: "100%" }}>
+
           {/* <View style={styles.cards}>
             <Link as={TouchableOpacity} href={"/collectionTable"}>
               <FontAwesome

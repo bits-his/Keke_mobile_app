@@ -6,15 +6,18 @@ import {
   TextInput,
   Button,
   StyleSheet,
+  TouchableOpacity,
 } from "react-native";
 import { _get, _post } from "./Helper";
 import DateTimePicker from "@react-native-community/datetimepicker"; // For selecting date range
-import { AuthContext } from "./context/Context";
+import { AuthContext } from "../context/Context";
+import { useNavigation } from "expo-router";
 
 export default function collectionTable() {
   const [search, setSearch] = useState("");
   const [data, setData] = useState([]);
   const { user } = useContext(AuthContext);
+   const navigation = useNavigation();
 
   //   const getReg = useCallback(() => {
   //     _post(
@@ -34,12 +37,13 @@ export default function collectionTable() {
   //   }, []);
 
   useEffect(() => {
-    console.log("i must");
     _post(
       `top-up/history`,
       {
         source_id: user.account_id,
-        query_type: `select_${user.account_type}`,
+        // source_id: "AGN00024",
+        query_type: `history`,
+        // query_type: `select_agent`,
       },
       (resp) => {
         if (resp.success && resp.results) {
@@ -78,26 +82,56 @@ export default function collectionTable() {
   // Filters the data within the date range
   const renderTableHeader = () => (
     <View style={styles.tableHeader}>
-      {/* <Text style={styles.tableHeaderText}>Vehicle Id</Text>
-      <Text style={styles.tableHeaderText}>Plate No</Text>
-      <Text style={styles.tableHeaderText}>balance</Text> */}
+     <Text style={styles.tableHeaderText}>S/N</Text>
+      <Text style={styles.tableHeaderText}>Date</Text>
+      <Text style={styles.tableHeaderText}>Account Id</Text>
+      <Text style={styles.tableHeaderText1}>Amout</Text>
     </View>
   );
 
-  const renderTableRow = ({ item }) => (
-    <View style={styles.tableRow}>
-      <View style={styles.tableCell}>
-        <Text style>{item.description}</Text>
-        <Text style>{item.t_date}</Text>
-        <View>
-          <Text style>{item.credit}</Text>
-          <Text style>{item.success}</Text>
+//   const renderTableRow = ({ item }) => (
+//     <View style={styles.tableRow}>
+//       <View style={styles.tableCell}>
+//         <View>
+//           <Text style={styles.head}>{item.description}</Text>
+//           <Text style={styles.date}>{item.t_date}</Text>
+//         </View>
+//         <View>
+//           <Text style={styles.balance}>
+//             {item.credit != 0 ? `+${item.credit}` : `-${item.debit}`}
+//           </Text>
+//           <Text style={styles.status}>
+//             {item.status ? "Sucessfull" : "Failed"}
+//           </Text>
+//         </View>
+//       </View>
+//     </View>
+//   );
+    
+const renderTableRow = ({ item,index }) => (
+    <TouchableOpacity
+    style={styles.border}
+    onPress={() => {navigation.navigate("Invoice" , { item })}}
+    >
+
+      <View style={styles.tableRow}>
+        <View style={styles.tableCell}>
+            <Text>{index +1}</Text>
+            <Text style={styles.head}>{item.t_date}</Text>
+            <Text style={styles.date}>{item.source_id}</Text>
+        
+            <Text style={styles.balance}>
+              {item.credit != 0 ? `${item.credit}` : `${item.debit}`}
+            </Text>
+           
         </View>
       </View>
-      {/* <Text style={styles.tableCell}>{item.plate_no}</Text>
-      <Text style={styles.tableCell}>{item.balance}</Text> */}
-    </View>
-  );
+    </TouchableOpacity>
+    );
+    const filterData = data.filter(
+      (item) =>
+        item.source_id.toLowerCase().includes(search.toLowerCase()) 
+    );
 
   return (
     <View style={styles.container}>
@@ -110,7 +144,7 @@ export default function collectionTable() {
           placeholder="Search"
           keyboardType="email-address"
           value={search}
-          onChangeText={(text) => setSearch("search", text)}
+          onChangeText={setSearch}
         />
         <Text style={styles.button}>Search</Text>
       </View>
@@ -144,6 +178,16 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 40,
     marginBottom: 40,
   },
+  head: {
+    fontWeight: "bold",
+  },
+  border: {
+    borderWidth: 1,
+    borderLeftColor: "#dedede",
+    borderRightColor: "#dedede",
+    borderBottomColor: "white",
+    borderTopColor: "white",
+  },
   headerText: {
     textAlign: "center",
     marginTop: 40,
@@ -163,7 +207,11 @@ const styles = StyleSheet.create({
   tableHeaderText: {
     fontWeight: "bold",
     flex: 1,
-    textAlign: "center",
+  },
+  tableHeaderText1: {
+    fontWeight: "bold",
+    flex: 1,
+    textAlign:"end",
   },
   tableRow: {
     flexDirection: "row",
@@ -175,7 +223,10 @@ const styles = StyleSheet.create({
   },
   tableCell: {
     flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
     textAlign: "center",
+    padding: 10,
   },
   noDataText: {
     textAlign: "center",
