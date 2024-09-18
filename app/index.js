@@ -7,6 +7,7 @@ import {
 import SignIn from "./Signin/LogIn";
 // import SignIn from "./Signin/LogIn";
 
+
 export default function index() {
   const navigation = useNavigation();
   const [form, setForm] = useState({
@@ -23,9 +24,13 @@ export default function index() {
   };
 
   return (
+
+
     <View style={styles.container}>
       <SignIn />
     </View>
+
+
   );
 }
 

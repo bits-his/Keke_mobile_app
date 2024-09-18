@@ -13,46 +13,17 @@ const Topup = () => {
   const [vehicleNumber, setVehicleNumber] = useState("");
   const [amount, setAmount] = useState("");
   const [name ,setName] = useState("");
+  const [filter, setFilter] = useState("VHC00001");
 
   const handleSubmit = () => {
     console.log(`Vehicle Number: ${vehicleNumber}`);
     console.log(`Amount: ${amount}`);
   };
-  const getName = useCallback(() => {
-     fetch(`http://localhost:44405/superagent?query_type=select&id=""`)
-       .then((raw) => raw.json())
-       .then((result) => {
-         console.log(result);
-       })
-       .catch((err) => {
-         console.error(err);
-       });
+useEffect(() => {
+  
   
   },[])
-  useEffect(() => {
-     _get(`superagent?query_type=select&id=""`, (resp) => {
-       console.log(resp);
-     });
-      return () => {
-        console.log("Cleanup on unmount");
-      };
-  },[])
-    const getReg = useCallback(() => {
-      _get(`superagent?query_type=select&id=`, (resp) => {
-        if (resp.success && resp.results) {
-          setData(resp.results);
-          console.log(resp.results);
-        }
-      }),
-      (err) => {
-        console.log(err);
-      }
-    }, []);
 
-    useEffect(() => {
-      getReg();
-    //   getName()
-    }, [getReg]);
   console.log("Ahmad")
 
   return (

@@ -1,15 +1,36 @@
 import { FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Link } from "expo-router";
-import React, { useState } from "react";
+import React, {useCallback, useContext, useEffect, useState} from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { AuthContext } from "./context/Context";
+import { _get, separator } from "./Helper";
+
 
 export default function DashBoard() {
+  const { user, setUser, token, setToken } = useContext(AuthContext);
+  const [balance, setBalance] = useState("")
     const [showPassword, setShowPassword] = useState(false);
 
+      const getBalance = useCallback(() => {
+        _get(
+          `balance?query_type=balance&source_id=${user.account_id}`,
+          (resp) => {
+            console.log(resp.results[0]);
+            setBalance(resp.results[0].balance);
+          },
+          (err) => {
+            console.log(err);
+          }
+        );
+      }, [user]);
+      useEffect(() => {
+        getBalance();
+      }, [showPassword]);
+      console.log(user.account_id);
     return (
         <View style={styles.container}>
             <View style={styles.headerDashboard}>
-                <Text style={styles.headerText}>Welcome Adewale Murtala</Text>
+                <Text style={styles.headerText}>Welcome {user.name}</Text>
                 <View style={styles.accountBalance}>
                     <View style={{ flexDirection: 'row', width: '50%' }}>
                         <View style={styles.accountBalanceText}>
@@ -32,7 +53,7 @@ export default function DashBoard() {
                                     />
                                 </TouchableOpacity>
                             </View>
-                            {showPassword ? <Text style={styles.amount}>N200,000</Text> : <Text style={{
+                            {showPassword ? <Text style={styles.amount}>N{separator(balance)}</Text> : <Text style={{
                                 fontSize: 25,
                                 textAlign: 'center',
                                 color: '#FFF'
@@ -68,7 +89,7 @@ export default function DashBoard() {
             </View>
             <View style={{ flexDirection: 'row', width: '100%' }}>
                 <View style={styles.cards}>
-                    <Link as={TouchableOpacity} href={"/collectionTable"}>
+                    <Link as={TouchableOpacity} href={"/TransactionTable"}>
                         <Ionicons
                             style={styles.icon}
                             name="albums"
@@ -76,8 +97,8 @@ export default function DashBoard() {
                             color="#f5c005"
                         />
                     </Link>
-                    <Link as={TouchableOpacity} href={"/collectionTable"}>
-                        <Text style={styles.CardText}>My Collection</Text></Link>
+                    <Link as={TouchableOpacity} href={"/TransactionTable"}>
+                        <Text style={styles.CardText}>My Transactions</Text></Link>
                 </View>
                 <View style={styles.cards}>
                     <Link as={TouchableOpacity} href={"/searchVehicles"}>
@@ -107,6 +128,19 @@ export default function DashBoard() {
                         <Text style={styles.CardText}>Top Up</Text>
                     </Link>
                 </View>
+                {/* <View style={styles.cards}>
+                    <Link as={TouchableOpacity} href={"/QrScan"}>
+                        <MaterialIcons
+                            style={styles.icon}
+                            name="add-circle-outline"
+                            size={80}
+                            color="#f5c005"
+                        />
+                    </Link>
+                    <Link as={TouchableOpacity} href={"/QrScan"}>
+                        <Text style={styles.CardText}>Scan  QRCode</Text>
+                    </Link>
+                </View> */}
             </View>
         </View >
     )
