@@ -1,9 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
-import { BarCodeScanner } from 'expo-barcode-scanner';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
+import { BarCodeScanner } from "expo-barcode-scanner";
+import { useNavigation } from "@react-navigation/native";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 const qrSize = width * 0.7;
 const qrBlur = width * 0.5;
 
@@ -15,35 +21,23 @@ const QrScan = () => {
   useEffect(() => {
     (async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
-      setHasPermission(status === 'granted');
+      setHasPermission(status === "granted");
     })();
   }, []);
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-
     try {
-      const parsedData = JSON.parse(data);
-      
-      if (parsedData.source_id && parsedData.credit && parsedData.transaction_id && parsedData.created_at) {
-        navigation.navigate('QrResult', {
-          source_id: parsedData.source_id,
-          credit: parsedData.credit,
-          transaction_id: parsedData.transaction_id,
-          created_at: parsedData.created_at
-        });
+      const url = new URL(data);
+      const plate_no = new URLSearchParams(url.search).get("plate_no");
+
+      if (plate_no) {
+        navigation.navigate("QrResult", { plate_no });
       } else {
-        const url = new URL(data);
-        const plate_no = new URLSearchParams(url.search).get('plate_no');
-        
-        if (plate_no) {
-          navigation.navigate('QrResult', { plate_no });
-        } else {
-          alert('Invalid QR code: No plate number or invoice data found.');
-        }
+        alert("Invalid QR code: No plate number found.");
       }
     } catch (error) {
-      alert('Invalid QR code format.');
+      alert("Invalid QR code format.");
       console.error(error);
     }
   };
@@ -63,22 +57,41 @@ const QrScan = () => {
       />
       <View style={styles.overlay}>
         {/* Top */}
-        <View style={[styles.blur, { height: (width - qrBlur) / 1, width: '100%' }]} />
+        <View
+          style={[styles.blur, { height: (width - qrBlur) / 1, width: "100%" }]}
+        />
 
-        <View style={{ flexDirection: 'row' }}>
-          <View style={[styles.blur, { width: (width - qrSize) / 2, height: qrSize }]} />
+        <View style={{ flexDirection: "row" }}>
+          <View
+            style={[
+              styles.blur,
+              { width: (width - qrSize) / 2, height: qrSize },
+            ]}
+          />
           <View style={styles.scanArea}>
             <View style={styles.scanFrame} />
-            <Text style={styles.instructionText}>Align the QR code within the frame</Text>
+            <Text style={styles.instructionText}>
+              Align the QR code within the frame
+            </Text>
           </View>
-          <View style={[styles.blur, { width: (width - qrSize) / 2, height: qrSize }]} />
+          <View
+            style={[
+              styles.blur,
+              { width: (width - qrSize) / 2, height: qrSize },
+            ]}
+          />
         </View>
 
         {/* Bottom */}
-        <View style={[styles.blur, { height: (width - qrBlur) / 1, width: '100%' }]} />
+        <View
+          style={[styles.blur, { height: (width - qrBlur) / 1, width: "100%" }]}
+        />
 
         {scanned && (
-          <TouchableOpacity onPress={() => setScanned(false)} style={styles.rescanButton}>
+          <TouchableOpacity
+            onPress={() => setScanned(false)}
+            style={styles.rescanButton}
+          >
             <Text style={styles.rescanText}>Tap to scan again</Text>
           </TouchableOpacity>
         )}
@@ -90,46 +103,46 @@ const QrScan = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f5c005',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f5c005",
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   scanArea: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   scanFrame: {
     width: qrSize,
     height: qrSize,
     borderWidth: 4,
-    borderColor: '#f5c005',
+    borderColor: "#f5c005",
     borderRadius: 10,
   },
   blur: {
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   instructionText: {
-    color: '#f5c005',
+    color: "#f5c005",
     fontSize: 18,
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 10,
     zIndex: 1,
   },
   rescanButton: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 50,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    backgroundColor: '#f5c005',
+    backgroundColor: "#f5c005",
     borderRadius: 10,
   },
   rescanText: {
-    color: '#000',
+    color: "#000",
     fontSize: 16,
   },
 });

@@ -20,16 +20,6 @@ const SearchVehicles = () => {
              navigation.navigate("QrResult", { plate_no });
    
   };
-  const getName = useCallback(() => {
-    fetch(`http://localhost:44405/superagent?query_type=select&id=""`)
-      .then((raw) => raw.json())
-      .then((result) => {
-        console.log(result);
-      })
-      .catch((err) => {
-        error(err);
-      });
-  }, []);
   useEffect(() => {
     _get(`vehicles?query_type=select-all`, (resp) => {
       if (resp.success) {
@@ -120,10 +110,10 @@ const styles = StyleSheet.create({
   text: {
     textAlign: "center",
     fontSize: 20,
-    marginTop: 25,
+    marginTop: 65,
     color: "white",
     fontWeight: "bold",
-    fontFamily: "Arial",
+    // fontFamily: "Arial",
   },
   card: {
     height: 230,
@@ -135,7 +125,7 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     // borderWidth: 1,
     elevation: 60,
-    marginTop: 50,
+    marginTop: 80,
   },
   submitButton: {
     padding: 15,

@@ -51,7 +51,7 @@ export default function DashBoard({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerDashboard}>
-        <Text style={styles.headerText}>Welcome {user.name}</Text>
+        <Text style={styles.headerText}>Welcome {user.name} </Text>
         <View style={styles.accountBalance}>
           <View style={{ flexDirection: "row", width: "50%" }}>
             <View style={styles.accountBalanceText}>
@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: "white",
     fontWeight: "bold",
-    fontFamily: "Arial",
+    // fontFamily: "Arial",
   },
   cards: {
     margin: 10,

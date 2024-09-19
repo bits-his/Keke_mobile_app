@@ -14,7 +14,7 @@ export default function DashBoard() {
     _get(
       `balance?query_type=balance&source_id=${user.account_id}`,
       (resp) => {
-        console.log(resp.results[0]);
+        // console.log(resp.results[0]);
         setBalance(resp.results[0].balance);
       },
       (err) => {
@@ -25,7 +25,7 @@ export default function DashBoard() {
   useEffect(() => {
     getBalance();
   }, [showPassword]);
-  console.log(user.account_id);
+//   console.log(balance);
   return (
     <View style={styles.container}>
       <View style={styles.headerDashboard}>
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: "white",
     fontWeight: "bold",
-    fontFamily: "Arial",
+    // fontFamily: "Arial",
   },
   cards: {
     margin: 10,

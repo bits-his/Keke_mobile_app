@@ -6,18 +6,21 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
-} from "react-native";
+  Modal,
+} from "react-native"; // Import Alert
 import moment from "moment";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { _get, _post } from "./Helper";
 import { AuthContext } from "../context/Context";
+import { useNavigation } from "expo-router";
 
 const Topup = () => {
+  const navigation = useNavigation();
   const [selectedOption, setSelectedOption] = useState("vehicle");
   const { user, balance } = useContext(AuthContext);
-  const [vehicleNumber, setVehicleNumber] = useState("");
+  const [vehicleNumber, setVehicleNumber] = useState("VHC");
   const [plateNumber, setPlateNumber] = useState("");
-  const [ownerNumber, setOwnerNumber] = useState("");
+  const [ownerNumber, setOwnerNumber] = useState("OWN");
   const [ownerName, setOwnerName] = useState("");
   const [vehicleAmount, setVehicleAmount] = useState("");
   const [ownerAmount, setOwnerAmount] = useState("");
@@ -34,7 +37,6 @@ const Topup = () => {
       `vehicles?query_type=select-all`,
       (resp) => {
         console.log("vehicle data", resp.data[0]);
-        // setBalance(resp.data[0]);
         const formattedData = resp.data.map((vehicle) => ({
           vehicle_id: vehicle.vehicle_id,
           plate_no: vehicle.plate_no,
@@ -131,7 +133,7 @@ const Topup = () => {
 
     if (Array.isArray(ownerData)) {
       const matchingOwner = ownerData.find(
-        (owner) => owner.account_id === text
+        (owner) => owner.account_id === text.toUpperCase()
       );
       if (matchingOwner) {
         setOwnerName(matchingOwner.name);
@@ -144,6 +146,10 @@ const Topup = () => {
       setOwnerError("Owner data is not available");
     }
   };
+
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const handleSubmit = async () => {
     console.log("owner")
@@ -171,7 +177,10 @@ const Topup = () => {
         topupData,
         (resp) => {
           if (resp.success) {
-            Alert.alert("Success", "✅Topup successful", [{ text: "OK" }]);
+            setModalMessage("✅Topup successful");
+            setShowModal(true);
+            setIsSuccess(true);
+            // Alert.alert("Success", "✅Topup successful", [{ text: "OK" }]);
             setVehicleNumber("");
             setPlateNumber("");
             setOwnerNumber("");
@@ -181,18 +190,21 @@ const Topup = () => {
             setVehicleError("");
             setSelectedOption("vehicle");
           } else {
-            Alert.alert("Error", "Topup failed. Please try again.", [
-              { text: "OK" },
-            ]);
+            setModalMessage("Topup failed. Please try again.");
+            setShowModal(true);
+            setIsSuccess(false);
+            // Alert.alert("Error", "Topup failed. Please try again.", [
+            //   { text: "OK" },
+            // ]);
           }
         },
         (err) => {
           console.error("Error submitting topup:", err);
-          Alert.alert(
-            "Error",
-            "There was an issue submitting the topup. Please try again later.",
-            [{ text: "OK" }]
-          );
+          setModalMessage(
+            "There was an issue submitting the topup. Please try again later.");
+          setShowModal(true)
+          setIsSuccess(false)
+          setIsSuccess(false);
         }
       );
     }
@@ -232,6 +244,7 @@ const Topup = () => {
                 placeholder="Enter Vehicle Number"
                 value={vehicleNumber}
                 onChangeText={handleVehicleNumberChange}
+                
               />
               {plateNumber ? (
                 <Text style={styles.infoText}>Plate Number: {plateNumber}</Text>
@@ -275,6 +288,29 @@ const Topup = () => {
             <Text style={styles.submitButtonText}>Submit</Text>
           </TouchableOpacity>
         </View>
+        <Modal
+          transparent={true}
+          visible={showModal}
+          animationType="slide"
+          onRequestClose={() => setShowModal(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.alertBox}>
+              <Text style={styles.message}>{modalMessage}</Text>
+              <TouchableOpacity
+                onPress={() => {
+                  setShowModal(false)
+                  if (isSuccess) {
+                    navigation.navigate("TransactionTable");
+                  }
+                }}
+                style={styles.okButton}
+              >
+                <Text style={styles.okText}>OK</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </View>
     </SafeAreaView>
   );
@@ -296,10 +332,10 @@ const styles = StyleSheet.create({
   text: {
     textAlign: "center",
     fontSize: 18,
-    marginTop: 25,
+    marginTop: 15,
     color: "white",
     fontWeight: "bold",
-    fontFamily: "Arial",
+    // fontFamily: "Arial",
   },
   card: {
     height: 300,
@@ -310,7 +346,7 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     shadowColor: "#000",
     elevation: 60,
-    marginTop: 50,
+    marginTop: 90,
   },
   buttonGroup: {
     flexDirection: "row",
@@ -360,6 +396,33 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: "red",
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  alertBox: {
+    width: 300,
+    padding: 20,
+    backgroundColor: "white",
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  message: {
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  okButton: {
+    backgroundColor: "#f5c005",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  okText: {
+    color: "white",
+    fontSize: 16,
   },
 });
 export default Topup;

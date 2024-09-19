@@ -40,8 +40,8 @@ export default function collectionTable() {
         </View>
     );
 
-    const renderTableRow = ({ item }) => (
-        <View style={styles.tableRow}>
+    const renderTableRow = ({ item, i }) => (
+        <View style={styles.tableRow} key={i}>
             <Text style={styles.tableCell}>{item.vehicle_id}</Text>
             <Text style={styles.tableCell}>{item.plate_no}</Text>
             <Text style={styles.tableCell}>{item.balance}</Text>
@@ -55,7 +55,7 @@ export default function collectionTable() {
     return (
         <View style={styles.container}>
             <View style={styles.headerDashboard}>
-                <Text style={styles.headerText}>My Total Collection</Text>
+                <Text style={styles.headerText}>My Vehicles</Text>
             </View>
             <View style={{ flexDirection: "row" }}>
                 <TextInput
@@ -100,11 +100,11 @@ const styles = StyleSheet.create({
     },
     headerText: {
         textAlign: 'center',
-        marginTop: 40,
+        marginTop: 65,
         fontSize: 20,
         color: "white",
         fontWeight: 'bold',
-        fontFamily: 'Arial',
+        // fontFamily: 'Arial',
     },
     tableHeader: {
         flexDirection: "row",

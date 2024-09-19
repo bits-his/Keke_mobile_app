@@ -24,16 +24,17 @@ const QrResult = () => {
   useEffect(() => {
     setLoading(true);
      _get(
-       `http://localhost:44405/vehicles?query_type=verify&plate_no=plate1234`,
+       `vehicles?query_type=verify&plate_no=${plate_no}`,
        (resp) => {
          console.log(resp);
          setData(resp.data);
-         if (resp.sucess) {
-           
+         if (resp.success) {
+            setLoading(false);
          } else {
+setLoading(false);
            Alert.alert("Error", "Failed to fetch data");
          }
-         setLoading(false);
+         
        },
        (err) => {
          console.log(err);

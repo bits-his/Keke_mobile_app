@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import { _get, _post } from "./Helper";
+import { _get, _post, separator } from "./Helper";
 import DateTimePicker from "@react-native-community/datetimepicker"; // For selecting date range
 import { AuthContext } from "../context/Context";
 import { useNavigation } from "expo-router";
@@ -76,6 +76,7 @@ export default function collectionTable() {
     <TouchableOpacity
       style={styles.border}
       onPress={() => { navigation.navigate("TransactionDetails", { details:item }) }}
+      key={index}
     >
 
       <View style={styles.tableRow}>
@@ -183,13 +184,14 @@ export default function collectionTable() {
         <Text style={styles.button}>Search</Text>
       </View>
       <View>
-        <Text style={styles.balance}>Balance: {dataBalace}</Text>
+        <Text style={styles.balance}>Balance: {separator(dataBalace)}</Text>
       </View>
-      <ScrollView>
+      {/* <ScrollView> */}
         <View style={{ margin: 10 }}>
           <FlatList
-            data={data}
-            keyExtractor={(item) => item.transaction_id}
+          scrollEnabled={true}
+            data={filterData}
+            keyExtractor={(item, i) => `${item.transaction_id} ${i}` }
             ListHeaderComponent={renderTableHeader}
             renderItem={renderTableRow}
           />
@@ -201,7 +203,7 @@ export default function collectionTable() {
             </View>
           )}
         </View>
-      </ScrollView>
+      {/* </ScrollView> */}
     </View>
   );
 }
@@ -216,7 +218,7 @@ const styles = StyleSheet.create({
     height: 120,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
-    marginBottom: 40,
+    marginBottom: 10,
   },
   head: {
     fontWeight: "bold",
@@ -230,11 +232,11 @@ const styles = StyleSheet.create({
   },
   headerText: {
     textAlign: "center",
-    marginTop: 40,
+    marginTop: 65,
     fontSize: 20,
     color: "white",
     fontWeight: "bold",
-    fontFamily: "Arial",
+    // fontFamily: "Arial",
   },
   tableHeader: {
     flexDirection: "row",
@@ -315,6 +317,6 @@ const styles = StyleSheet.create({
     color: "#f5c005",
     textAlign: "right",
     marginTop: 10,
-    marginRight: 10,
+    marginRight: 14,
   },
 });

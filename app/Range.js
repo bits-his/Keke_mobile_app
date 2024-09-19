@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: "white",
         fontWeight: 'bold',
-        fontFamily: 'Arial',
+        // fontFamily: 'Arial',
     },
     tableHeader: {
         flexDirection: "row",
