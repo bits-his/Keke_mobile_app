@@ -115,7 +115,7 @@ export default function collectionTable() {
   return (
     <View style={styles.container}>
       <View style={styles.headerDashboard}>
-        <Text style={styles.headerText}>Transactions{JSON.stringify(dataBalace)}</Text>
+        <Text style={styles.headerText}>Transactions</Text>
       </View>
 
       <View style={styles.dateContainer}>

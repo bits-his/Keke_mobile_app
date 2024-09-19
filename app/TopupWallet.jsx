@@ -7,14 +7,17 @@ import {
   StyleSheet,
 } from "react-native";
 import { _get } from "./Helper";
+import { useRoute } from "@react-navigation/native";
 
 const TopupWallet = () => {
+    const route = useRoute();
+    const { vehicle_id,plate_no } = route.params;
   const [vehicleNumber, setVehicleNumber] = useState("");
   const [amount, setAmount] = useState("");
   const [name, setName] = useState("");
 
   const handleSubmit = () => {
-    console.log(`Vehicle Number: ${vehicleNumber}`);
+    console.log(`Vehicle Number: ${vehicle_id}`);
     console.log(`Amount: ${amount}`);
   };
   const getName = useCallback(() => {
@@ -39,9 +42,9 @@ const TopupWallet = () => {
 
   return (
     <View style={styles.containHeader}>
-      <Text style={styles.text}>Top Up Wallet</Text>
+      <Text style={styles.text}>Top Up Vehicle</Text>
       <View style={styles.container}>
-      {/* <View style={styles.container}> */}
+        {/* <View style={styles.container}> */}
         <View style={styles.card}>
           <View style={styles.buttonGroup}>
             {/* <TouchableOpacity
@@ -65,17 +68,18 @@ const TopupWallet = () => {
           </View>
 
           <View>
-            <Text>Select Agent</Text>
+            <Text>Vehicle Id</Text>
             <TextInput
               style={styles.input}
               placeholder="Enter Vehicle Number"
-              value={vehicleNumber}
-              onChangeText={setVehicleNumber}
+              value={vehicle_id}
+              editable={false}
+              //   onChangeText={setVehicleNumber}
             />
           </View>
-          <View style={styles.name}>
-            <Text>{name}</Text>
-          </View>
+          {/* <View style={styles.name}> */}
+            <Text style={styles.infoText}>Plate Number: {plate_no}</Text>
+          {/* </View> */}
           <View>
             <Text>Amount</Text>
             <TextInput
@@ -102,7 +106,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 270,
     padding: 15,
-
   },
   containHeader: {
     backgroundColor: "#f5c005",
@@ -129,7 +132,7 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: "#fff",
     borderRadius: 10,
-    borderColor: 'gray',
+    borderColor: "gray",
     shadowColor: "#000",
     elevation: 60,
     marginTop: 50,
@@ -172,6 +175,13 @@ const styles = StyleSheet.create({
   submitButtonText: {
     color: "#fff",
     fontWeight: "bold",
+  },
+  infoText: {
+    fontWeight: "bold",
+    textAlign: "end",
+    marginBottom: 10,
+    fontSize: 16,
+    color: "#000",
   },
 });
 export default TopupWallet;

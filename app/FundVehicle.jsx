@@ -7,9 +7,12 @@ import {
   StyleSheet,
 } from "react-native";
 import { _get } from "./Helper";
+import { useRoute } from "@react-navigation/native";
 
 
 const Topup = () => {
+    const route = useRoute
+    const { plate_no } = route.params;
   const [vehicleNumber, setVehicleNumber] = useState("");
   const [amount, setAmount] = useState("");
   const [name ,setName] = useState("");
