@@ -73,8 +73,8 @@ export default function collectionTable() {
   const filterData = data.filter((item) => {
     const itemDate = new Date(item.t_date);
     return (
-      itemDate >= fromDate &&
-      itemDate <= toDate &&
+    //   itemDate >= fromDate &&
+    //   itemDate <= toDate &&
       item.source_id.toLowerCase().includes(search.toLowerCase())
     );
   });
