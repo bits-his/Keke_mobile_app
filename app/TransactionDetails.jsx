@@ -174,6 +174,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-//fefedfef
+//fefedfe
 
 export default TransactionDetails;
