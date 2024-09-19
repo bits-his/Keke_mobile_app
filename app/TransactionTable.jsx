@@ -44,22 +44,22 @@ export default function collectionTable() {
     );
   }, [fromDate, toDate]);
 
-  useEffect(() => {
-    _post(
-      `top-up/history`,
-      {
-        source_id: user.account_id,
-        query_type: `IN_date_from and IN_date_to`,
-      },
-      (resp) => {
-        if (resp.success && resp.results) {
-          setDataBalace(resp.results);
-          console.log(resp.results);
-          console.log("kjhagsdfjhagkshfhsbh",dataBalace);
-        }
-      }
-    );
-  }, []);
+  // useEffect(() => {
+  //   _post(
+  //     `top-up/history`,
+  //     {
+  //       source_id: user.account_id,
+  //       query_type: `IN_date_from and IN_date_to`,
+  //     },
+  //     (resp) => {
+  //       if (resp.success && resp.results) {
+  //         setDataBalace(resp.results);
+  //         console.log(resp.results);
+  //         console.log("kjhagsdfjhagkshfhsbh",dataBalace);
+  //       }
+  //     }
+  //   );
+  // }, []);
 
   const renderTableHeader = () => (
     <View style={styles.tableHeader}>
