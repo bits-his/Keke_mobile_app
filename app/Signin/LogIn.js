@@ -111,6 +111,7 @@ export default function SignIn() {
         {/* <Link as={TouchableOpacity} style={styles.button} href={"/dashboard"}>
           Submit
         </Link> */}
+         <Link as={TouchableOpacity} style={styles.button} href={"/TransactionDetails"}>Submit</Link>
         {/* <Link as={TouchableOpacity} style={styles.button} href={"/TransactionTable"}>Submit</Link> */}
       </View>
     </View>

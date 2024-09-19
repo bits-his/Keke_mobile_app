@@ -12,9 +12,10 @@ import { separator } from './Helper';
 const QrResult = () => {
   const route = useRoute();
   const { plate_no } = route.params;
-  const [data, setData] = useState(null);  // Default to null to check existence
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
+
 
   const handleBackClick = () => {
     navigation.goBack();
@@ -23,7 +24,7 @@ const QrResult = () => {
   useEffect(() => {
     setLoading(true);
      _get(
-       `vehicles?query_type=verify&plate_no=${plate_no}`,
+       `http://localhost:44405/vehicles?query_type=verify&plate_no=plate1234`,
        (resp) => {
          console.log(resp);
          setData(resp.data);
@@ -69,7 +70,7 @@ const QrResult = () => {
         <Text style={styles.backText}>{"<"} Back</Text>
       </TouchableOpacity>
 
-      {data && data.length > 0 ? (  // Ensure data exists and has items
+      {data.length ? (
         <View style={styles.card}>
           <Text style={styles.verifiedText}>✅ VERIFIED</Text>
           <View style={styles.row}>
