@@ -63,7 +63,7 @@ export default function SignIn() {
   return (
     <View style={styles.container}>
       <View style={styles.signInCard}>
-        <Text>{user?.username}</Text>
+        {/* <Text>{user?.username}</Text> */}
         <View style={styles.headerContainer}>
           <Image source={logo} style={styles.profile} />
           <Text style={styles.headerText}>
@@ -111,7 +111,7 @@ export default function SignIn() {
         {/* <Link as={TouchableOpacity} style={styles.button} href={"/dashboard"}>
           Submit
         </Link> */}
-        {/* <Link as={TouchableOpacity} style={styles.button} href={"/TransactionTable"}>Submit</Link> */}
+        <Link as={TouchableOpacity} style={styles.button} href={"/QrScan"}>Submit</Link>
       </View>
     </View>
   );

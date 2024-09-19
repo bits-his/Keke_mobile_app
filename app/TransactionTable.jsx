@@ -49,17 +49,18 @@ export default function collectionTable() {
       `top-up/history`,
       {
         source_id: user.account_id,
-        query_type: `IN_date_from and IN_date_to`,
+        query_type: `history_total`,
+        date_from: moment(fromDate).format("YYYY-MM-DD"),
+        date_to: moment(toDate).format("YYYY-MM-DD"),
       },
       (resp) => {
         if (resp.success && resp.results) {
-          setDataBalace(resp.results);
-          console.log(resp.results);
-          console.log("kjhagsdfjhagkshfhsbh",dataBalace);
+          setDataBalace(resp.results[0].balance);
+          console.log(resp.results[0]);
         }
       }
     );
-  }, []);
+  }, [fromDate, toDate]);
 
   const renderTableHeader = () => (
     <View style={styles.tableHeader}>
@@ -115,7 +116,7 @@ export default function collectionTable() {
   return (
     <View style={styles.container}>
       <View style={styles.headerDashboard}>
-        <Text style={styles.headerText}>Transactions</Text>
+        <Text style={styles.headerText}>Transactions {JSON.stringify(dataBalace )}</Text>
       </View>
 
       <View style={styles.dateContainer}>
