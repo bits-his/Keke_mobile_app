@@ -24,7 +24,8 @@ const TransactionDetails = () => {
         </View>
         <View style={styles.statusItem}>
           <Text style={styles.statusTitle}>Processing by bank</Text>
-          <Text style={styles.statusTime}>09-18 05:49:09</Text>
+          <Text style={styles.statusTime}>09-18 05:49:0
+            9</Text>
         </View>
         <View style={styles.statusItem}>
           <Text style={styles.statusTitle}>Received by bank</Text>
