@@ -108,9 +108,9 @@ export default function SignIn() {
         {/* <Text style={styles.error}>{toParagraph(Object.keys(error)[0])}</Text> */}
         <Text style={styles.error}>{Object.values(error)[0]}</Text>
         <Button style={styles.button} title="Submit" onPress={handleLogin} />
-        {/* <Link as={TouchableOpacity} style={styles.button} href={"/dashboard"}>
+        <Link as={TouchableOpacity} style={styles.button} href={"/QrScan"}>
           Submit
-        </Link> */}
+        </Link>
         {/* <Link as={TouchableOpacity} style={styles.button} href={"/QrScan"}>Submit</Link> */}
       </View>
     </View>

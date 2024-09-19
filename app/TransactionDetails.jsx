@@ -1,96 +1,83 @@
 import { useRoute } from '@react-navigation/native';
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import QRCode from 'react-native-qrcode-svg';
 import moment from 'moment';
 
 const TransactionDetails = () => {
-    const route = useRoute()
+    const route = useRoute();
     const { details } = route.params;
-    console.log(details)
-  return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Transaction Details</Text>
-      </View>
 
-      <View style={styles.transferInfo}>
-        <View style={styles.logo}>
-          <Text style={styles.logoText}>M</Text>
-        </View>
-        <Text style={styles.transferText}>Transfer to {details.source_id}</Text>
-        <Text style={styles.amount}>₦{details.credit}</Text>
-        <Text style={styles.status}>Successful</Text>
-      </View>
-      {/* 
-      <View style={styles.statusContainer}>
-        <View style={styles.statusItem}>
-          <Text style={styles.statusTitle}>Payment successful</Text>
-          <Text style={styles.statusTime}>09-18 05:49:09</Text>
-        </View>
-        <View style={styles.statusItem}>
-          <Text style={styles.statusTitle}>Processing by bank</Text>
-          <Text style={styles.statusTime}>09-18 05:49:0
-            9</Text>
-        </View>
-        <View style={styles.statusItem}>
-          <Text style={styles.statusTitle}>Received by bank</Text>
-          <Text style={styles.statusTime}>09-18 05:50:16</Text>
-        </View>
-      </View> */}
+    const qrValue = JSON.stringify({
+        source_id: details.source_id,
+        credit: details.credit,
+        transaction_id: details.transaction_id,
+        created_at: details.created_at,
+    });
 
-      <View style={styles.amountSection}>
-        <View style={styles.amountItem}>
-          <Text style={styles.amountLabel}>Amount</Text>
-          <Text style={styles.amountValue}>₦{details.credit}</Text>
-        </View>
-        {/* <View style={styles.amountItem}>
-          <Text style={styles.amountLabel}>Fee</Text>
-          <Text style={styles.amountValue}>₦0.00</Text>
-        </View> */}
-        <View style={styles.amountItem}>
-          <Text style={styles.amountLabel}>Amount Paid</Text>
-          <Text style={styles.amountValue}>₦{details.credit}</Text>
-        </View>
-      </View>
+    return (
+        <ScrollView style={styles.container}>
+            <View style={styles.header}>
+                <Text style={styles.headerText}>Payment Receipt Details</Text>
+            </View>
 
-      <View style={styles.transactionDetails}>
-        <Text style={styles.sectionTitle}>Transaction Details</Text>
-        <Text style={styles.detailText}>{details.source_id}</Text>
-        <View style={styles.details}>
-          <Text style={styles.detailText}>Transaction Type</Text>
-          <Text>Top Up </Text>
-        </View>
-        <View style={styles.details}>
-          <Text style={styles.detailText}>Transaction Number:</Text>
-          {/* <Text style={styles.detailText}> 240918024569587926</Text> */}
-          <Text style={styles.detailText}>{details.transaction_id}</Text>
-        </View>
+            <View style={styles.transferInfo}>
+                <QRCode
+                    value={qrValue}
+                    size={100}
+                    backgroundColor="white"
+                    color="black"
+                />
+                <Text style={styles.amount}>₦{details.credit}</Text>
+                <Text style={styles.status}>Successful</Text>
+            </View>
 
-        <View style={styles.details}>
-          <Text style={styles.detailText}>Payment Method: </Text>
-          <Text style={styles.detailText}>Wallet</Text>
-        </View>
-        <View style={styles.details}>
-          <Text style={styles.detailText}>Transaction Date:</Text>
-          {/* <Text style={styles.detailText}>Sep 18th, 2024 05:49:09</Text> */}
-          <Text style={styles.detailText}>
-            {moment(details.created_at).format("MMM Do YYYY, h:mm:ss a")}
-          </Text>
-        </View>
+            <View style={styles.amountSection}>
+                {/* <View style={styles.amountItem}>
+                    <Text style={styles.amountLabel}>Amount</Text>
+                    <Text style={styles.amountValue}>₦{details.credit}</Text>
+                </View> */}
+                <View style={styles.amountItem}>
+                    <Text style={styles.amountLabel}>Amount Paid</Text>
+                    <Text style={styles.amountValue}>₦{details.credit}</Text>
+                </View>
+            </View>
 
-        {/* <Text style={styles.detailText}>SessionID: 00000§§§§00000</Text> */}
-      </View>
+            <View style={styles.transactionDetails}>
+                <Text style={styles.sectionTitle}>Transaction Details</Text>
+                <Text style={styles.detailText}>{details.source_id}</Text>
+                <View style={styles.details}>
+                    <Text style={styles.detailText}>Transaction Type</Text>
+                    <Text>Top Up </Text>
+                </View>
+                <View style={styles.details}>
+                    <Text style={styles.detailText}>Transaction Number:</Text>
+                    <Text style={styles.detailText}>{details.transaction_id}</Text>
+                    <Text style={styles.amount}>{details.amount}</Text>
+                </View>
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Report an issue</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Share Receipt</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
-  );
+                <View style={styles.details}>
+                    <Text style={styles.detailText}>Payment Method: </Text>
+                    <Text style={styles.detailText}>Wallet</Text>
+                </View>
+                <View style={styles.details}>
+                    <Text style={styles.detailText}>Transaction Date:</Text>
+                    <Text style={styles.detailText}>
+                        {moment(details.created_at).format("MMM Do YYYY, h:mm:ss a")}
+                    </Text>
+                </View>
+            </View>
+
+            <View style={styles.buttonContainer}>
+                <TouchableOpacity style={styles.button}>
+                    <Text style={styles.buttonText}>Report an issue</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button}>
+                    <Text style={styles.buttonText}>Share Receipt</Text>
+                </TouchableOpacity>
+            </View>
+        </ScrollView>
+    );
 };
 
 const styles = StyleSheet.create({
@@ -197,6 +184,10 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
+  transferInfo: {
+    alignItems: 'center',
+    marginBottom: 20,
+},
   details: {
     flex: 1,
     flexDirection: 'row',
