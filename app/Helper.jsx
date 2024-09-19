@@ -9,7 +9,7 @@ import { useContext } from "react";
 import { AuthContext } from "../context/Context";
 
 export const _post = (url, data, success = (f) => f, error = (f) => f) => {
-  const token = "Bearer 2trhfsvyhjsgdvsh";
+  const token = "2trhfsvyhjsgdvsh";
 
   // console.log(token);
   fetch(`${server_url}/${url}`, {
