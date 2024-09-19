@@ -44,22 +44,23 @@ export default function collectionTable() {
     );
   }, [fromDate, toDate]);
 
-  // useEffect(() => {
-  //   _post(
-  //     `top-up/history`,
-  //     {
-  //       source_id: user.account_id,
-  //       query_type: `IN_date_from and IN_date_to`,
-  //     },
-  //     (resp) => {
-  //       if (resp.success && resp.results) {
-  //         setDataBalace(resp.results);
-  //         console.log(resp.results);
-  //         console.log("kjhagsdfjhagkshfhsbh",dataBalace);
-  //       }
-  //     }
-  //   );
-  // }, []);
+  useEffect(() => {
+    _post(
+      `top-up/history`,
+      {
+        source_id: user.account_id,
+        query_type: `history_total`,
+        date_from: moment(fromDate).format("YYYY-MM-DD"),
+        date_to: moment(toDate).format("YYYY-MM-DD"),
+      },
+      (resp) => {
+        if (resp.success && resp.results) {
+          setDataBalace(resp.results[0].balance);
+          console.log(resp.results[0]);
+        }
+      }
+    );
+  }, [fromDate, toDate]);
 
   const renderTableHeader = () => (
     <View style={styles.tableHeader}>
@@ -115,7 +116,7 @@ export default function collectionTable() {
   return (
     <View style={styles.container}>
       <View style={styles.headerDashboard}>
-        <Text style={styles.headerText}>Transactions</Text>
+        <Text style={styles.headerText}>Transactions {JSON.stringify(dataBalace )}</Text>
       </View>
 
       <View style={styles.dateContainer}>
@@ -181,10 +182,12 @@ export default function collectionTable() {
         />
         <Text style={styles.button}>Search</Text>
       </View>
-
+      <View>
+        <Text style={styles.balance}>Balance: {dataBalace}</Text>
+      </View>
       <View style={{ margin: 10 }}>
         <FlatList
-          data={filterData}
+          data={data}
           keyExtractor={(item) => item.id}
           ListHeaderComponent={renderTableHeader}
           renderItem={renderTableRow}
@@ -303,5 +306,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     color: "#f5c005",
+  },
+  balance: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#f5c005",
+    textAlign: "right",
+    marginTop: 10,
+    marginRight: 10,
   },
 });
