@@ -1,43 +1,91 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useContext } from "react";
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Alert
 } from "react-native";
-import { _get } from "./Helper";
+import { _get,_post } from "./Helper";
 import { useRoute } from "@react-navigation/native";
+import { AuthContext } from "../context/Context";
+import moment from "moment";
+import { useNavigation } from "expo-router";
 
 const TopupWallet = () => {
     const route = useRoute();
+    const navigatiion = useNavigation()
     const { vehicle_id,plate_no } = route.params;
+    const {balance,user} = useContext(AuthContext)
   const [vehicleNumber, setVehicleNumber] = useState("");
   const [amount, setAmount] = useState("");
   const [name, setName] = useState("");
 
-  const handleSubmit = () => {
-    console.log(`Vehicle Number: ${vehicle_id}`);
-    console.log(`Amount: ${amount}`);
-  };
-  const getName = useCallback(() => {
-    fetch(`http://localhost:44405/superagent?query_type=select&id=""`)
-      .then((raw) => raw.json())
-      .then((result) => {
-        console.log(result);
-      })
-      .catch((err) => {
-        error(err);
-      });
-  }, []);
-  useEffect(() => {
-    _get(`superagent?query_type=select&id=""`, (resp) => {
-      console.log(resp);
-    });
-    return () => {
-      console.log("Cleanup on unmount");
+//   const handleSubmit = () => {
+//     console.log(`Vehicle Number: ${vehicle_id}`);
+//     console.log(`Amount: ${amount}`);
+//   };
+    const handleSubmit = () => {
+      console.log("Vehicle",balance);
+      const sourceId = user.account_id
+
+      const topupData = {
+        query_type: "top_up",
+        source_id: sourceId,
+        destination_id: vehicle_id,
+        type_of_top_up: `vehicle_top_up`,
+        amount: amount,
+        t_date: moment().format("YYYY-MM-DD"),
+        date_from: null,
+        date_to: null,
+      };
+      if (balance < amount) {
+        Alert.alert("Error", "⛔️Insufficient Balance Please fund Wallet.", [
+          { text: "OK" },
+        ]);
+      } else {
+        _post(
+          `top-up/create`,
+          topupData,
+          (resp) => {
+            if (resp.success) {
+              Alert.alert("Success", "✅Topup successful", [{ text: "OK" }]);
+              navigatiion.navigate("main-body/DashBoard")
+            //   setVehicleNumber("");
+            //   setPlateNumber("");
+            //   setOwnerNumber("");
+            //   setOwnerName("");
+            //   setVehicleAmount("");
+            //   setOwnerAmount("");
+            //   setVehicleError("");
+            //   setSelectedOption("vehicle");
+            } else {
+              Alert.alert("Error", "Topup failed. Please try again.", [
+                { text: "OK" },
+              ]);
+            }
+          },
+          (err) => {
+            console.error("Error submitting topup:", err);
+            Alert.alert(
+              "Error",
+              "There was an issue submitting the topup. Please try again later.",
+              [{ text: "OK" }]
+            );
+          }
+        );
+      }
     };
-  }, []);
+
+//   useEffect(() => {
+//     _get(`superagent?query_type=select&id=""`, (resp) => {
+//       console.log(resp);
+//     });
+//     return () => {
+//       console.log("Cleanup on unmount");
+//     };
+//   }, []);
 
 
   return (
