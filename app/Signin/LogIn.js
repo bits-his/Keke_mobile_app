@@ -111,7 +111,7 @@ export default function SignIn() {
         {/* <Link as={TouchableOpacity} style={styles.button} href={"/dashboard"}>
           Submit
         </Link> */}
-        <Link as={TouchableOpacity} style={styles.button} href={"/QrScan"}>Submit</Link>
+        {/* <Link as={TouchableOpacity} style={styles.button} href={"/QrScan"}>Submit</Link> */}
       </View>
     </View>
   );

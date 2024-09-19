@@ -182,10 +182,12 @@ export default function collectionTable() {
         />
         <Text style={styles.button}>Search</Text>
       </View>
-
+      <View>
+        <Text style={styles.balance}>Balance: {dataBalace}</Text>
+      </View>
       <View style={{ margin: 10 }}>
         <FlatList
-          data={filterData}
+          data={data}
           keyExtractor={(item) => item.id}
           ListHeaderComponent={renderTableHeader}
           renderItem={renderTableRow}
@@ -304,5 +306,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     color: "#f5c005",
+  },
+  balance: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#f5c005",
+    textAlign: "right",
+    marginTop: 10,
+    marginRight: 10,
   },
 });
