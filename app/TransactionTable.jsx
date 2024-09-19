@@ -17,10 +17,11 @@ import moment from "moment";
 export default function collectionTable() {
   const [search, setSearch] = useState("");
   const [data, setData] = useState([]);
+  const [dataBalace, setDataBalace] = useState([]);
   const { user } = useContext(AuthContext);
   const navigation = useNavigation();
 
-  const [fromDate, setFromDate] = useState(new Date()); 
+  const [fromDate, setFromDate] = useState(new Date());
   const [toDate, setToDate] = useState(new Date());
   const [showFromDatePicker, setShowFromDatePicker] = useState(false);
   const [showToDatePicker, setShowToDatePicker] = useState(false);
@@ -31,11 +32,30 @@ export default function collectionTable() {
       {
         source_id: user.account_id,
         query_type: `history`,
+        date_from: moment(fromDate).format("YYYY-MM-DD"),
+        date_to: moment(toDate).format("YYYY-MM-DD"),
       },
       (resp) => {
         if (resp.success && resp.results) {
           setData(resp.results);
           console.log(resp.results);
+        }
+      }
+    );
+  }, [fromDate, toDate]);
+
+  useEffect(() => {
+    _post(
+      `top-up/history`,
+      {
+        source_id: user.account_id,
+        query_type: `IN_date_from and IN_date_to`,
+      },
+      (resp) => {
+        if (resp.success && resp.results) {
+          setDataBalace(resp.results);
+          console.log(resp.results);
+          console.log("kjhagsdfjhagkshfhsbh",dataBalace);
         }
       }
     );
@@ -70,14 +90,8 @@ export default function collectionTable() {
       </View>
     </TouchableOpacity>
   );
-  const filterData = data.filter((item) => {
-    const itemDate = new Date(item.t_date);
-    return (
-      itemDate >= fromDate &&
-      itemDate <= toDate &&
-      item.source_id.toLowerCase().includes(search.toLowerCase())
-    );
-  });
+
+  const filterData = data.filter(item => item.source_id.toLowerCase().includes(search.toLowerCase()))
 
   // Date Picker Handlers
   const showFromDatePickerHandler = () => {
@@ -101,27 +115,37 @@ export default function collectionTable() {
   return (
     <View style={styles.container}>
       <View style={styles.headerDashboard}>
-        <Text style={styles.headerText}>Transactions</Text>
-      </View>
-      <View style={{ flexDirection: "row" }}>
-        <TextInput
-          style={styles.input}
-          placeholder="Search"
-          keyboardType="email-address"
-          value={search}
-          onChangeText={setSearch}
-        />
-        <Text style={styles.button}>Search</Text>
+        <Text style={styles.headerText}>Transactions{JSON.stringify(dataBalace)}</Text>
       </View>
 
       <View style={styles.dateContainer}>
-        <TouchableOpacity onPress={showFromDatePickerHandler}>
+        <TouchableOpacity
+          style={{
+            borderWidth: 1,
+            borderColor: '#f5c005',
+            padding: 10,
+            borderRadius: 5,
+            margin: 5,
+            width: '45%'
+          }}
+          onPress={showFromDatePickerHandler}
+        >
           <Text style={styles.datePickerLabel}>
             From: {moment(fromDate).format("YYYY-MM-DD")}
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={showToDatePickerHandler}>
+        <TouchableOpacity
+          style={{
+            borderWidth: 1,
+            borderColor: '#f5c005',
+            padding: 10,
+            borderRadius: 5,
+            width: '45%',
+            margin: 5
+          }}
+          onPress={showToDatePickerHandler}
+        >
           <Text style={styles.datePickerLabel}>
             To: {moment(toDate).format("YYYY-MM-DD")}
           </Text>
@@ -145,6 +169,18 @@ export default function collectionTable() {
           onChange={handleToDateChange}
         />
       )}
+
+      <View style={{ flexDirection: "row" }}>
+        <TextInput
+          style={styles.input}
+          placeholder="Search"
+          keyboardType="email-address"
+          value={search}
+          onChangeText={setSearch}
+
+        />
+        <Text style={styles.button}>Search</Text>
+      </View>
 
       <View style={{ margin: 10 }}>
         <FlatList
@@ -261,6 +297,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     marginVertical: 10,
+    width: "100%",
   },
   datePickerLabel: {
     fontSize: 16,
