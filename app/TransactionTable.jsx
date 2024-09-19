@@ -12,38 +12,25 @@ import { _get, _post } from "./Helper";
 import DateTimePicker from "@react-native-community/datetimepicker"; // For selecting date range
 import { AuthContext } from "../context/Context";
 import { useNavigation } from "expo-router";
+import moment from "moment";
 
 export default function collectionTable() {
   const [search, setSearch] = useState("");
   const [data, setData] = useState([]);
   const { user } = useContext(AuthContext);
-   const navigation = useNavigation();
+  const navigation = useNavigation();
 
-  //   const getReg = useCallback(() => {
-  //     _post(
-  //       `top-up/history`,
-  //       {
-  //         source_id: user.account_id,
-  //         type_of_top_up: "agent_top_up",
-  //         query_type: "select_agent",
-  //       },
-  //       (resp) => {
-  //         if (resp.success && resp.results) {
-  //           setData(resp.results);
-  //           console.log(resp.results)
-  //         }
-  //       }
-  //     );
-  //   }, []);
+  const [fromDate, setFromDate] = useState(new Date()); 
+  const [toDate, setToDate] = useState(new Date());
+  const [showFromDatePicker, setShowFromDatePicker] = useState(false);
+  const [showToDatePicker, setShowToDatePicker] = useState(false);
 
   useEffect(() => {
     _post(
       `top-up/history`,
       {
         source_id: user.account_id,
-        // source_id: "AGN00024",
         query_type: `history`,
-        // query_type: `select_agent`,
       },
       (resp) => {
         if (resp.success && resp.results) {
@@ -54,61 +41,62 @@ export default function collectionTable() {
     );
   }, []);
 
-  // Filters the data within the date range
-  // const filterDate = data.filter(item => item.)
-
   const renderTableHeader = () => (
     <View style={styles.tableHeader}>
-     <Text style={styles.tableHeaderText}>S/N</Text>
+      <Text style={styles.tableHeaderText}>S/N</Text>
       <Text style={styles.tableHeaderText}>Date</Text>
       <Text style={styles.tableHeaderText}>Account Id</Text>
       <Text style={styles.tableHeaderText1}>Amout</Text>
     </View>
   );
 
-//   const renderTableRow = ({ item }) => (
-//     <View style={styles.tableRow}>
-//       <View style={styles.tableCell}>
-//         <View>
-//           <Text style={styles.head}>{item.description}</Text>
-//           <Text style={styles.date}>{item.t_date}</Text>
-//         </View>
-//         <View>
-//           <Text style={styles.balance}>
-//             {item.credit != 0 ? `+${item.credit}` : `-${item.debit}`}
-//           </Text>
-//           <Text style={styles.status}>
-//             {item.status ? "Sucessfull" : "Failed"}
-//           </Text>
-//         </View>
-//       </View>
-//     </View>
-//   );
-    
-const renderTableRow = ({ item,index }) => (
+  const renderTableRow = ({ item, index }) => (
     <TouchableOpacity
-    style={styles.border}
-    onPress={() => {navigation.navigate("Invoice" , { item })}}
+      style={styles.border}
+      onPress={() => { navigation.navigate("Invoice", { item }) }}
     >
 
       <View style={styles.tableRow}>
         <View style={styles.tableCell}>
-            <Text>{index +1}</Text>
-            <Text style={styles.head}>{item.t_date}</Text>
-            <Text style={styles.date}>{item.source_id}</Text>
-        
-            <Text style={styles.balance}>
-              {item.credit != 0 ? `${item.credit}` : `${item.debit}`}
-            </Text>
-           
+          <Text>{index + 1}</Text>
+          <Text style={styles.head}>{item.t_date}</Text>
+          <Text style={styles.date}>{item.source_id}</Text>
+
+          <Text style={styles.balance}>
+            {item.credit != 0 ? `${item.credit}` : `${item.debit}`}
+          </Text>
+
         </View>
       </View>
     </TouchableOpacity>
+  );
+  const filterData = data.filter((item) => {
+    const itemDate = new Date(item.t_date);
+    return (
+      itemDate >= fromDate &&
+      itemDate <= toDate &&
+      item.source_id.toLowerCase().includes(search.toLowerCase())
     );
-    const filterData = data.filter(
-      (item) =>
-        item.source_id.toLowerCase().includes(search.toLowerCase()) 
-    );
+  });
+
+  // Date Picker Handlers
+  const showFromDatePickerHandler = () => {
+    setShowFromDatePicker(true);
+  };
+
+  const showToDatePickerHandler = () => {
+    setShowToDatePicker(true);
+  };
+
+  const handleFromDateChange = (event, selectedDate) => {
+    setShowFromDatePicker(false);
+    if (selectedDate) setFromDate(selectedDate);
+  };
+
+  const handleToDateChange = (event, selectedDate) => {
+    setShowToDatePicker(false);
+    if (selectedDate) setToDate(selectedDate);
+  };
 
   return (
     <View style={styles.container}>
@@ -125,6 +113,39 @@ const renderTableRow = ({ item,index }) => (
         />
         <Text style={styles.button}>Search</Text>
       </View>
+
+      <View style={styles.dateContainer}>
+        <TouchableOpacity onPress={showFromDatePickerHandler}>
+          <Text style={styles.datePickerLabel}>
+            From: {moment(fromDate).format("YYYY-MM-DD")}
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={showToDatePickerHandler}>
+          <Text style={styles.datePickerLabel}>
+            To: {moment(toDate).format("YYYY-MM-DD")}
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* DateTimePickers */}
+      {showFromDatePicker && (
+        <DateTimePicker
+          value={fromDate}
+          mode="date"
+          display="default"
+          onChange={handleFromDateChange}
+        />
+      )}
+      {showToDatePicker && (
+        <DateTimePicker
+          value={toDate}
+          mode="date"
+          display="default"
+          onChange={handleToDateChange}
+        />
+      )}
+
       <View style={{ margin: 10 }}>
         <FlatList
           data={filterData}
@@ -132,12 +153,13 @@ const renderTableRow = ({ item,index }) => (
           ListHeaderComponent={renderTableHeader}
           renderItem={renderTableRow}
         />
-
-        <View>
-          <Text style={styles.noDataText}>
-            No data available for the selected date range.
-          </Text>
-        </View>
+        {filterData.length === 0 && (
+          <View>
+            <Text style={styles.noDataText}>
+              No data available for the selected date range.
+            </Text>
+          </View>
+        )}
       </View>
     </View>
   );
@@ -188,7 +210,7 @@ const styles = StyleSheet.create({
   tableHeaderText1: {
     fontWeight: "bold",
     flex: 1,
-    textAlign:"end",
+    textAlign: "end",
   },
   tableRow: {
     flexDirection: "row",
@@ -234,5 +256,15 @@ const styles = StyleSheet.create({
     height: 40,
     borderBottomRightRadius: 5,
     borderTopRightRadius: 5,
+  },
+  dateContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginVertical: 10,
+  },
+  datePickerLabel: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#f5c005",
   },
 });

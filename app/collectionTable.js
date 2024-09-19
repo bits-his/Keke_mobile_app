@@ -68,20 +68,19 @@ export default function collectionTable() {
                 <Text style={styles.button}>Search</Text>
             </View>
             <View style={{ margin: 10 }}>
-
-
                 <FlatList
                     data={filterData}
                     keyExtractor={(item) => item.id}
                     ListHeaderComponent={renderTableHeader}
                     renderItem={renderTableRow}
                 />
-
-                {/* <View>
-            <Text style={styles.noDataText}>
-              No data available for the selected date range.
-            </Text> */}
-                {/* </View> */}
+                {filterData.length === 0 && (
+                    <View>
+                        <Text style={styles.noDataText}>
+                            No data available for the selected date range.
+                        </Text>
+                    </View>
+                )}
             </View>
         </View>
     );
