@@ -7,6 +7,7 @@ import {
   Button,
   StyleSheet,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import { _get, _post } from "./Helper";
 import DateTimePicker from "@react-native-community/datetimepicker"; // For selecting date range
@@ -74,7 +75,7 @@ export default function collectionTable() {
   const renderTableRow = ({ item, index }) => (
     <TouchableOpacity
       style={styles.border}
-      onPress={() => { navigation.navigate("Invoice", { item }) }}
+      onPress={() => { navigation.navigate("TransactionDetails", { details:item }) }}
     >
 
       <View style={styles.tableRow}>
@@ -123,11 +124,11 @@ export default function collectionTable() {
         <TouchableOpacity
           style={{
             borderWidth: 1,
-            borderColor: '#f5c005',
+            borderColor: "#f5c005",
             padding: 10,
             borderRadius: 5,
             margin: 5,
-            width: '45%'
+            width: "45%",
           }}
           onPress={showFromDatePickerHandler}
         >
@@ -139,11 +140,11 @@ export default function collectionTable() {
         <TouchableOpacity
           style={{
             borderWidth: 1,
-            borderColor: '#f5c005',
+            borderColor: "#f5c005",
             padding: 10,
             borderRadius: 5,
-            width: '45%',
-            margin: 5
+            width: "45%",
+            margin: 5,
           }}
           onPress={showToDatePickerHandler}
         >
@@ -178,28 +179,29 @@ export default function collectionTable() {
           keyboardType="email-address"
           value={search}
           onChangeText={setSearch}
-
         />
         <Text style={styles.button}>Search</Text>
       </View>
       <View>
         <Text style={styles.balance}>Balance: {dataBalace}</Text>
       </View>
-      <View style={{ margin: 10 }}>
-        <FlatList
-          data={data}
-          keyExtractor={(item) => item.id}
-          ListHeaderComponent={renderTableHeader}
-          renderItem={renderTableRow}
-        />
-        {filterData.length === 0 && (
-          <View>
-            <Text style={styles.noDataText}>
-              No data available for the selected date range.
-            </Text>
-          </View>
-        )}
-      </View>
+      <ScrollView>
+        <View style={{ margin: 10 }}>
+          <FlatList
+            data={data}
+            keyExtractor={(item) => item.transaction_id}
+            ListHeaderComponent={renderTableHeader}
+            renderItem={renderTableRow}
+          />
+          {filterData.length === 0 && (
+            <View>
+              <Text style={styles.noDataText}>
+                No data available for the selected date range.
+              </Text>
+            </View>
+          )}
+        </View>
+      </ScrollView>
     </View>
   );
 }

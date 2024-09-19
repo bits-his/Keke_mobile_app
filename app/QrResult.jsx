@@ -24,7 +24,7 @@ const QrResult = () => {
   useEffect(() => {
     setLoading(true);
      _get(
-       `vehicles?query_type=verify&plate_no=${plate_no}`,
+       `http://localhost:44405/vehicles?query_type=verify&plate_no=plate1234`,
        (resp) => {
          console.log(resp);
          setData(resp.data);
