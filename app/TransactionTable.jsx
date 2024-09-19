@@ -8,7 +8,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import { _get, _post } from "./Helper";
+import { _get, _post, separator } from "./Helper";
 import DateTimePicker from "@react-native-community/datetimepicker"; // For selecting date range
 import { AuthContext } from "../context/Context";
 import { useNavigation } from "expo-router";
@@ -116,7 +116,7 @@ export default function collectionTable() {
   return (
     <View style={styles.container}>
       <View style={styles.headerDashboard}>
-        <Text style={styles.headerText}>Transactions {JSON.stringify(dataBalace )}</Text>
+        <Text style={styles.headerText}>Transactions</Text>
       </View>
 
       <View style={styles.dateContainer}>
@@ -183,7 +183,7 @@ export default function collectionTable() {
         <Text style={styles.button}>Search</Text>
       </View>
       <View>
-        <Text style={styles.balance}>Balance: {dataBalace}</Text>
+        <Text style={styles.balance}>Balance: {separator(dataBalace)}</Text>
       </View>
       <View style={{ margin: 10 }}>
         <FlatList
@@ -313,6 +313,6 @@ const styles = StyleSheet.create({
     color: "#f5c005",
     textAlign: "right",
     marginTop: 10,
-    marginRight: 10,
+    marginRight: 14,
   },
 });

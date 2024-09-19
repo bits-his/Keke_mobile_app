@@ -5,114 +5,78 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Alert
+  Alert,
+  Modal
 } from "react-native";
-import { _get,_post } from "./Helper";
+import { _get, _post } from "./Helper";
 import { useRoute } from "@react-navigation/native";
 import { AuthContext } from "../context/Context";
 import moment from "moment";
-import { useNavigation } from "expo-router";
+import { Link, useNavigation } from "expo-router";
 
 const TopupWallet = () => {
-    const route = useRoute();
-    const navigatiion = useNavigation()
-    const { vehicle_id,plate_no } = route.params;
-    const {balance,user} = useContext(AuthContext)
+  const route = useRoute();
+  const navigation = useNavigation()
+  const { vehicle_id, plate_no } = route.params;
+  const { balance, user } = useContext(AuthContext)
   const [vehicleNumber, setVehicleNumber] = useState("");
   const [amount, setAmount] = useState("");
   const [name, setName] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
 
-//   const handleSubmit = () => {
-//     console.log(`Vehicle Number: ${vehicle_id}`);
-//     console.log(`Amount: ${amount}`);
-//   };
-    const handleSubmit = () => {
-      console.log("Vehicle",balance);
-      const sourceId = user.account_id
+  const handleSubmit = () => {
+    console.log("Vehicle", balance);
+    const sourceId = user.account_id
 
-      const topupData = {
-        query_type: "top_up",
-        source_id: sourceId,
-        destination_id: vehicle_id,
-        type_of_top_up: `vehicle_top_up`,
-        amount: amount,
-        t_date: moment().format("YYYY-MM-DD"),
-        date_from: null,
-        date_to: null,
-      };
-      if (balance < amount) {
-        Alert.alert("Error", "⛔️Insufficient Balance Please fund Wallet.", [
-          { text: "OK" },
-        ]);
-      } else {
-        _post(
-          `top-up/create`,
-          topupData,
-          (resp) => {
-            if (resp.success) {
-              Alert.alert("Success", "✅Topup successful", [{ text: "OK" }]);
-              navigatiion.navigate("main-body/DashBoard")
-            //   setVehicleNumber("");
-            //   setPlateNumber("");
-            //   setOwnerNumber("");
-            //   setOwnerName("");
-            //   setVehicleAmount("");
-            //   setOwnerAmount("");
-            //   setVehicleError("");
-            //   setSelectedOption("vehicle");
-            } else {
-              Alert.alert("Error", "Topup failed. Please try again.", [
-                { text: "OK" },
-              ]);
-            }
-          },
-          (err) => {
-            console.error("Error submitting topup:", err);
-            Alert.alert(
-              "Error",
-              "There was an issue submitting the topup. Please try again later.",
-              [{ text: "OK" }]
-            );
-          }
-        );
-      }
+    const topupData = {
+      query_type: "top_up",
+      source_id: sourceId,
+      destination_id: vehicle_id,
+      type_of_top_up: `vehicle_top_up`,
+      amount: amount,
+      t_date: moment().format("YYYY-MM-DD"),
+      date_from: null,
+      date_to: null,
     };
-
-//   useEffect(() => {
-//     _get(`superagent?query_type=select&id=""`, (resp) => {
-//       console.log(resp);
-//     });
-//     return () => {
-//       console.log("Cleanup on unmount");
-//     };
-//   }, []);
+    if (balance < amount) {
+      setModalMessage("⛔️Insufficient Balance Please fund Wallet.");
+      setShowModal(true);
+    } else {
+      _post(
+        `top-up/create`,
+        topupData,
+        (resp) => {
+          if (resp.success) {
+            setModalMessage("✅Topup successful.");
+            setShowModal(true);
+            setIsSuccess(true);
+          } else {
+            setModalMessage("Topup failed. Please try again.");
+            setShowModal(true);
+            setIsSuccess(false);
+          }
+        },
+        (err) => {
+          console.error("Error submitting topup:", err);
+          setModalMessage(
+            "There was an issue submitting the topup. Please try again later.");
+          setShowModal(true)
+          setIsSuccess(false)
+          setIsSuccess(false);
+        }
+      );
+    }
+  };
 
 
   return (
     <View style={styles.containHeader}>
       <Text style={styles.text}>Top Up Vehicle</Text>
       <View style={styles.container}>
-        {/* <View style={styles.container}> */}
         <View style={styles.card}>
           <View style={styles.buttonGroup}>
-            {/* <TouchableOpacity
-            style={[
-              styles.button,
-              selectedOption === "vehicle" && styles.selectedButton,
-            ]}
-            onPress={() => console.log("vehicle")}
-          >
-            <Text style={styles.buttonText}>Vehicle</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.button,
-              selectedOption === "owner" && styles.selectedButton,
-            ]}
-            onPress={() => setSelectedOption("owner")}
-          >
-            <Text style={styles.buttonText}>Owner</Text>
-          </TouchableOpacity> */}
           </View>
 
           <View>
@@ -122,12 +86,9 @@ const TopupWallet = () => {
               placeholder="Enter Vehicle Number"
               value={vehicle_id}
               editable={false}
-              //   onChangeText={setVehicleNumber}
             />
           </View>
-          {/* <View style={styles.name}> */}
-            <Text style={styles.infoText}>Plate Number: {plate_no}</Text>
-          {/* </View> */}
+          <Text style={styles.infoText}>Plate Number: {plate_no}</Text>
           <View>
             <Text>Amount</Text>
             <TextInput
@@ -144,6 +105,29 @@ const TopupWallet = () => {
           </TouchableOpacity>
         </View>
       </View>
+      <Modal
+        transparent={true}
+        visible={showModal}
+        animationType="slide"
+        onRequestClose={() => setShowModal(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.alertBox}>
+            <Text style={styles.message}>{modalMessage}</Text>
+            <TouchableOpacity
+              onPress={() => {
+                setShowModal(false)
+                if (isSuccess) {
+                  navigation.navigate("main-body/DashBoard");
+                }
+              }}
+              style={styles.okButton}
+            >
+              <Text style={styles.okText}>OK</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -230,6 +214,33 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontSize: 16,
     color: "#000",
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  alertBox: {
+    width: 300,
+    padding: 20,
+    backgroundColor: "white",
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  message: {
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  okButton: {
+    backgroundColor: "#f5c005",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  okText: {
+    color: "white",
+    fontSize: 16,
   },
 });
 export default TopupWallet;
