@@ -21,14 +21,26 @@ const QrScan = () => {
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    try {
-      const url = new URL(data);
-      const plate_no = new URLSearchParams(url.search).get('plate_no');
 
-      if (plate_no) {
-        navigation.navigate('QrResult', { plate_no });
+    try {
+      const parsedData = JSON.parse(data);
+      
+      if (parsedData.source_id && parsedData.credit && parsedData.transaction_id && parsedData.created_at) {
+        navigation.navigate('QrResult', {
+          source_id: parsedData.source_id,
+          credit: parsedData.credit,
+          transaction_id: parsedData.transaction_id,
+          created_at: parsedData.created_at
+        });
       } else {
-        alert('Invalid QR code: No plate number found.');
+        const url = new URL(data);
+        const plate_no = new URLSearchParams(url.search).get('plate_no');
+        
+        if (plate_no) {
+          navigation.navigate('QrResult', { plate_no });
+        } else {
+          alert('Invalid QR code: No plate number or invoice data found.');
+        }
       }
     } catch (error) {
       alert('Invalid QR code format.');

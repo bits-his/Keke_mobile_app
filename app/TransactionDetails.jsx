@@ -8,12 +8,12 @@ const TransactionDetails = () => {
     const route = useRoute();
     const { details } = route.params;
 
-    const qrValue = JSON.stringify({
-        source_id: details.source_id,
-        credit: details.credit,
-        transaction_id: details.transaction_id,
-        created_at: details.created_at,
-    });
+      const qrValue = JSON.stringify({
+          source_id: details.source_id,
+          credit: details.credit,
+          transaction_id: details.transaction_id,
+          created_at: details.created_at,
+      });
 
     return (
         <ScrollView style={styles.container}>
@@ -33,10 +33,6 @@ const TransactionDetails = () => {
             </View>
 
             <View style={styles.amountSection}>
-                {/* <View style={styles.amountItem}>
-                    <Text style={styles.amountLabel}>Amount</Text>
-                    <Text style={styles.amountValue}>₦{details.credit}</Text>
-                </View> */}
                 <View style={styles.amountItem}>
                     <Text style={styles.amountLabel}>Amount Paid</Text>
                     <Text style={styles.amountValue}>₦{details.credit}</Text>
