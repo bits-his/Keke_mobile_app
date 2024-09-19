@@ -1,7 +1,12 @@
+import { useRoute } from '@react-navigation/native';
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import moment from 'moment';
 
 const TransactionDetails = () => {
+    const route = useRoute()
+    const { details } = route.params;
+    console.log(details)
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
@@ -12,11 +17,11 @@ const TransactionDetails = () => {
         <View style={styles.logo}>
           <Text style={styles.logoText}>M</Text>
         </View>
-        <Text style={styles.transferText}>Transfer to Sadiq Haruna</Text>
-        <Text style={styles.amount}>₦850.00</Text>
+        <Text style={styles.transferText}>Transfer to {details.source_id}</Text>
+        <Text style={styles.amount}>₦{details.credit}</Text>
         <Text style={styles.status}>Successful</Text>
       </View>
-
+      {/* 
       <View style={styles.statusContainer}>
         <View style={styles.statusItem}>
           <Text style={styles.statusTitle}>Payment successful</Text>
@@ -31,31 +36,49 @@ const TransactionDetails = () => {
           <Text style={styles.statusTitle}>Received by bank</Text>
           <Text style={styles.statusTime}>09-18 05:50:16</Text>
         </View>
-      </View>
+      </View> */}
 
       <View style={styles.amountSection}>
         <View style={styles.amountItem}>
           <Text style={styles.amountLabel}>Amount</Text>
-          <Text style={styles.amountValue}>₦850.00</Text>
+          <Text style={styles.amountValue}>₦{details.credit}</Text>
         </View>
-        <View style={styles.amountItem}>
+        {/* <View style={styles.amountItem}>
           <Text style={styles.amountLabel}>Fee</Text>
           <Text style={styles.amountValue}>₦0.00</Text>
-        </View>
+        </View> */}
         <View style={styles.amountItem}>
           <Text style={styles.amountLabel}>Amount Paid</Text>
-          <Text style={styles.amountValue}>₦850.00</Text>
+          <Text style={styles.amountValue}>₦{details.credit}</Text>
         </View>
       </View>
 
       <View style={styles.transactionDetails}>
         <Text style={styles.sectionTitle}>Transaction Details</Text>
-        <Text style={styles.detailText}>Sadiq Haruna</Text>
-        <Text style={styles.detailText}>Transaction Type: Transfer Vendor Top Up</Text>
-        <Text style={styles.detailText}>Transaction Number: 240918024569587926</Text>
-        <Text style={styles.detailText}>Payment Method: Wallet</Text>
-        <Text style={styles.detailText}>Transaction Date: Sep 18th, 2024 05:49:09</Text>
-        <Text style={styles.detailText}>SessionID: 00000§§§§00000</Text>
+        <Text style={styles.detailText}>{details.source_id}</Text>
+        <View style={styles.details}>
+          <Text style={styles.detailText}>Transaction Type</Text>
+          <Text>Top Up </Text>
+        </View>
+        <View style={styles.details}>
+          <Text style={styles.detailText}>Transaction Number:</Text>
+          {/* <Text style={styles.detailText}> 240918024569587926</Text> */}
+          <Text style={styles.detailText}>{details.transaction_id}</Text>
+        </View>
+
+        <View style={styles.details}>
+          <Text style={styles.detailText}>Payment Method: </Text>
+          <Text style={styles.detailText}>Wallet</Text>
+        </View>
+        <View style={styles.details}>
+          <Text style={styles.detailText}>Transaction Date:</Text>
+          {/* <Text style={styles.detailText}>Sep 18th, 2024 05:49:09</Text> */}
+          <Text style={styles.detailText}>
+            {moment(details.created_at).format("MMM Do YYYY, h:mm:ss a")}
+          </Text>
+        </View>
+
+        {/* <Text style={styles.detailText}>SessionID: 00000§§§§00000</Text> */}
       </View>
 
       <View style={styles.buttonContainer}>
@@ -174,6 +197,11 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
+  details: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  }
 });
 //fefedfe
 

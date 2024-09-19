@@ -45,7 +45,7 @@ export default function collectionTable() {
             <Text style={styles.tableCell}>{item.vehicle_id}</Text>
             <Text style={styles.tableCell}>{item.plate_no}</Text>
             <Text style={styles.tableCell}>{item.balance}</Text>
-            <TouchableOpacity style={styles.button1} onPress={() => navigation.navigate("TopupWallet")}>
+            <TouchableOpacity style={styles.button1} onPress={() => navigation.navigate("TopupWallet" ,{vehicle_id:item.vehicle_id,plate_no:item.plate_no})}>
                 <Text style={styles.buttonText}>Top Up</Text>
             </TouchableOpacity>
         </View>
@@ -68,20 +68,19 @@ export default function collectionTable() {
                 <Text style={styles.button}>Search</Text>
             </View>
             <View style={{ margin: 10 }}>
-
-
                 <FlatList
                     data={filterData}
                     keyExtractor={(item) => item.id}
                     ListHeaderComponent={renderTableHeader}
                     renderItem={renderTableRow}
                 />
-
-                {/* <View>
-            <Text style={styles.noDataText}>
-              No data available for the selected date range.
-            </Text> */}
-                {/* </View> */}
+                {filterData.length === 0 && (
+                    <View>
+                        <Text style={styles.noDataText}>
+                            No data available for the selected date range.
+                        </Text>
+                    </View>
+                )}
             </View>
         </View>
     );

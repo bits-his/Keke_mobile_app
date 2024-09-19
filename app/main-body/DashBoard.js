@@ -16,8 +16,7 @@ import { AuthContext } from "../../context/Context";
 import { _get, separator } from "../Helper";
 
 export default function DashBoard({ navigation }) {
-  const { user, setUser, token, setToken } = useContext(AuthContext);
-  const [balance, setBalance] = useState("");
+  const { user, setUser, token, setToken,balance,setBalance } = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
   const [vehicle_no, setVehicle_no] = useState("");
   const navigate = useNavigation();

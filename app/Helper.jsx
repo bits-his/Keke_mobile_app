@@ -2,14 +2,14 @@
 // export const server_url = "https://galaxybis.ebudgetkano.ng/karota";
 // export const server_url = 'https://hotelserver-production.up.railway.app'
 // export const server_url = 'http://localhost:34568'
- export const server_url = "http://localhost:44405";
-// export const server_url = "http://192.168.1.112:44405";
+export const server_url = "http://localhost:44405";
+// export const server_url = "http://192.168.1.194:44405";
 // export const server_url = "https://galaxybis.ebudgetkano.ng/keke-api";
 import { useContext } from "react";
 import { AuthContext } from "../context/Context";
 
 export const _post = (url, data, success = (f) => f, error = (f) => f) => {
-  const token = "Bearer 2trhfsvyhjsgdvsh";
+  const token = "2trhfsvyhjsgdvsh";
 
   // console.log(token);
   fetch(`${server_url}/${url}`, {
