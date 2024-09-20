@@ -35,7 +35,7 @@ export default function SignIn() {
     })
       .then((raw) => raw.json())
       .then((data) => {
-        console.log(data);
+        console.log(data );
         if (data.success) {
           setUser(data.user);
           setToken(data.token);
