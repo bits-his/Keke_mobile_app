@@ -108,7 +108,7 @@ export default function SignIn() {
         </View>
         {/* <Text style={styles.error}>{toParagraph(Object.keys(error)[0])}</Text> */}
         <Text style={styles.error}>{Object.values(error)[0]}</Text>
-        <Button style={styles.button} title="Submit" onPress={handleLogin} />
+        <TouchableOpacity style={styles.button} onPress={handleLogin} ><Text>Submit</Text></TouchableOpacity>
         {/* <Link as={TouchableOpacity} style={styles.button} href={"/QrScan"}>
           Submit
         </Link> */}
