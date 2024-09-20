@@ -244,7 +244,7 @@ const Topup = () => {
                 placeholder="Enter Vehicle Number"
                 value={vehicleNumber}
                 onChangeText={handleVehicleNumberChange}
-                
+                autoCapitalize="characters"
               />
               {plateNumber ? (
                 <Text style={styles.infoText}>Plate Number: {plateNumber}</Text>
@@ -299,7 +299,7 @@ const Topup = () => {
               <Text style={styles.message}>{modalMessage}</Text>
               <TouchableOpacity
                 onPress={() => {
-                  setShowModal(false)
+                  setShowModal(false);
                   if (isSuccess) {
                     navigation.navigate("TransactionTable");
                   }

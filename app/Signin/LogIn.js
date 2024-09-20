@@ -13,6 +13,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { _post, toParagraph } from "../Helper";
 import { AuthContext } from "../../context/Context";
+import { server_url } from "../Helper";
 
 export default function SignIn() {
   const navigation = useNavigation();
@@ -24,8 +25,8 @@ export default function SignIn() {
   const [error, setError] = useState({});
   const { user, setUser, token, setToken } = useContext(AuthContext);
   const handleLogin = () => {
-    console.log(form);
-    fetch(`http://localhost:44405/users/login`, {
+    console.log('Login')
+    fetch(`${server_url}/users/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -34,7 +35,7 @@ export default function SignIn() {
     })
       .then((raw) => raw.json())
       .then((data) => {
-        // console.log(data)
+        console.log(data);
         if (data.success) {
           setUser(data.user);
           setToken(data.token);
@@ -108,9 +109,9 @@ export default function SignIn() {
         {/* <Text style={styles.error}>{toParagraph(Object.keys(error)[0])}</Text> */}
         <Text style={styles.error}>{Object.values(error)[0]}</Text>
         <Button style={styles.button} title="Submit" onPress={handleLogin} />
-        <Link as={TouchableOpacity} style={styles.button} href={"/QrScan"}>
+        {/* <Link as={TouchableOpacity} style={styles.button} href={"/QrScan"}>
           Submit
-        </Link>
+        </Link> */}
         {/* <Link as={TouchableOpacity} style={styles.button} href={"/QrScan"}>Submit</Link> */}
       </View>
     </View>
