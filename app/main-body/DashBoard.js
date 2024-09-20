@@ -41,9 +41,7 @@ export default function DashBoard({ navigation }) {
     _get(`vehicles?query_type=select&owner_id=${user.account_id}`, (resp) => {
       if (resp.success && resp.data) {
         // setData(resp.data);
-        console.log(resp.data)
-        setVehicle_no(resp.data[0].vehicle_count);
-        console.log("hgzjhfgasjhghjsd", vehicle_no);
+        setVehicle_no(resp.data.length)
       }
     });
   }, []);

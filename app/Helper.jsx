@@ -2,8 +2,8 @@
 // export const server_url = "https://galaxybis.ebudgetkano.ng/karota";
 // export const server_url = 'https://hotelserver-production.up.railway.app'
 // export const server_url = 'http://localhost:34568'
-// export const server_url = "http://localhost:44405";
-export const server_url = "http://srv601919.hstgr.cloud:4400";
+export const server_url = "http://localhost:44405";
+// export const server_url = "http://srv601919.hstgr.cloud:4400";
 // export const server_url = "http://192.168.1.194:44405";
 // export const server_url = "https://galaxybis.ebudgetkano.ng/keke-api";
 import { useContext } from "react";

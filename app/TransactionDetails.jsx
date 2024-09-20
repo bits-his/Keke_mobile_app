@@ -41,7 +41,10 @@ const TransactionDetails = () => {
 
             <View style={styles.transactionDetails}>
                 <Text style={styles.sectionTitle}>Transaction Details</Text>
+                <View style={styles.details}>
+                  <Text >Account Id</Text>
                 <Text style={styles.detailText}>{details.source_id}</Text>
+                </View>
                 <View style={styles.details}>
                     <Text style={styles.detailText}>Transaction Type</Text>
                     <Text>Top Up </Text>
@@ -49,7 +52,7 @@ const TransactionDetails = () => {
                 <View style={styles.details}>
                     <Text style={styles.detailText}>Transaction Number:</Text>
                     <Text style={styles.detailText}>{details.transaction_id}</Text>
-                    <Text style={styles.amount}>{details.amount}</Text>
+                    {/* <Text style={styles.amount}>{details.amount}</Text> */}
                 </View>
 
                 <View style={styles.details}>
@@ -93,6 +96,7 @@ const styles = StyleSheet.create({
   transferInfo: {
     alignItems: 'center',
     marginBottom: 20,
+    
   },
   logo: {
     width: 50,
@@ -188,6 +192,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    paddingVertical: 7,
   }
 });
 //fefedfe
