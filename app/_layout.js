@@ -1,21 +1,25 @@
-import { Stack } from "expo-router";
+import { Stack, useNavigation } from "expo-router";
 import { Provider } from "../context/Context";
 
+
 export default function RootLayout() {
+  const navigation = useNavigation();
+  // const { user, token } = useContext(AuthContext);
+
+  // useEffect(() => {
+  //   if (!user || !token) {
+  //     navigation.navigate("index"); // If no user or token, redirect to login screen
+  //   }
+  // }, [user, token]);
+
+
   return (
     <Provider>
       <Stack>
-        {/* <Stack.Screen
-          name="index"
-          options={{ title: "Welcome", headerShown: false }}
-        /> */}
         <Stack.Screen
           name="dashBoard"
           options={{ title: "Dashboard", headerShown: true }}
         />
-        {/* </Stack>
-
-    <Stack> */}
         <Stack.Screen
           name="index"
           options={{ title: "Welcome", headerShown: false }}

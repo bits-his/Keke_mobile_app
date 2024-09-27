@@ -1,6 +1,5 @@
-import { Link, useNavigation } from "expo-router";
-import React, { useState, useEffect, useContext } from "react";
-import logo from "../../assets/images/keke_napep.png";
+import { useNavigation } from "expo-router";
+import React, { useState, useContext } from "react";
 import {
   Button,
   Image,
@@ -11,20 +10,24 @@ import {
   View,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { _post, toParagraph } from "../Helper";
+import logo from "../../assets/images/keke_napep.png";
 import { AuthContext } from "../../context/Context";
 
 export default function SignIn() {
   const navigation = useNavigation();
+  const { setUser, setToken } = useContext(AuthContext);
   const [form, setForm] = useState({
     username: "",
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState({});
-  const { user, setUser, token, setToken } = useContext(AuthContext);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+
   const handleLogin = () => {
-    console.log(form);
+    setLoading(true);
+    setError(null); 
+
     fetch(`http://localhost:44405/users/login`, {
       method: "POST",
       headers: {
@@ -32,38 +35,37 @@ export default function SignIn() {
       },
       body: JSON.stringify(form),
     })
-      .then((raw) => raw.json())
+      .then((response) => response.json())
       .then((data) => {
-        // console.log(data)
+        setLoading(false);
+
         if (data.success) {
           setUser(data.user);
           setToken(data.token);
-          console.log(data);
+
           if (data.user.account_type === "vehicle_owner") {
             navigation.navigate("main-body/DashBoard");
           } else {
             navigation.navigate("dashboard");
           }
         } else {
-          console.log(data);
-          setError(data);
+          setError(data.message || "Login failed. Please try again.");
         }
       })
       .catch((err) => {
+        setLoading(false);
+        setError("An error occurred. Please try again later.");
         console.error(err);
       });
   };
+
   const handleChange = (name, value) => {
-    setForm({
-      ...form,
-      [name]: value,
-    });
+    setForm({ ...form, [name]: value });
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.signInCard}>
-        {/* <Text>{user?.username}</Text> */}
         <View style={styles.headerContainer}>
           <Image source={logo} style={styles.profile} />
           <Text style={styles.headerText}>
@@ -71,47 +73,49 @@ export default function SignIn() {
             Please Log in
           </Text>
         </View>
+
         <View style={styles.inputContainer}>
           <Text>UserName</Text>
           <TextInput
             style={styles.input}
             placeholder="Email"
-            keyboardType="email-address"
             value={form.username}
             onChangeText={(text) => handleChange("username", text)}
           />
         </View>
+
         <View style={styles.inputContainer}>
           <Text>Password</Text>
-          <View style={styles.inputData}>
-            <View style={styles.passwordContainer}>
-              <TextInput
-                style={[styles.input1, styles.passwordInput]}
-                placeholder="Password"
-                secureTextEntry={!showPassword}
-                value={form.password}
-                onChangeText={(text) => handleChange("password", text)}
+          <View style={styles.passwordContainer}>
+            <TextInput
+              style={[styles.input1, styles.passwordInput]}
+              placeholder="Password"
+              secureTextEntry={!showPassword}
+              value={form.password}
+              onChangeText={(text) => handleChange("password", text)}
+            />
+            <TouchableOpacity
+              style={styles.icon}
+              onPress={() => setShowPassword(!showPassword)}
+            >
+              <Ionicons
+                name={showPassword ? "eye" : "eye-off"}
+                size={24}
+                color="gray"
               />
-              <TouchableOpacity
-                style={styles.icon}
-                onPress={() => setShowPassword(!showPassword)}
-              >
-                <Ionicons
-                  name={showPassword ? "eye" : "eye-off"}
-                  size={24}
-                  color="gray"
-                />
-              </TouchableOpacity>
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
-        {/* <Text style={styles.error}>{toParagraph(Object.keys(error)[0])}</Text> */}
-        <Text style={styles.error}>{Object.values(error)[0]}</Text>
-        <Button style={styles.button} title="Submit" onPress={handleLogin} />
-        {/* <Link as={TouchableOpacity} style={styles.button} href={"/dashboard"}>
-          Submit
-        </Link> */}
-        {/* <Link as={TouchableOpacity} style={styles.button} href={"/QrScan"}>Submit</Link> */}
+
+        {error && <Text style={styles.error}>{error}</Text>}
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleLogin}
+          disabled={loading}
+        >
+          <Text style={styles.buttonText}>{loading ? "Logging in..." : "Submit"}</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -131,7 +135,7 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: "#fff",
     borderRadius: 10,
-    elevation: 5, // Adds shadow effect on Android
+    elevation: 5,
   },
   headerContainer: {
     alignItems: "center",
@@ -165,6 +169,9 @@ const styles = StyleSheet.create({
   passwordContainer: {
     flexDirection: "row",
     alignItems: "center",
+    borderColor: "#f5c005",
+    borderWidth: 1,
+    borderRadius: 5,
   },
   passwordInput: {
     flex: 1,

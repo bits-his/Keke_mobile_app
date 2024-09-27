@@ -14,12 +14,13 @@ import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import { AuthContext } from "../../context/Context";
 import { _get, separator } from "../Helper";
+import CustomNavBar from "./CustomNavBar";
 
-export default function DashBoard({ navigation }) {
-  const { user, setUser, token, setToken,balance,setBalance } = useContext(AuthContext);
+export default function DashBoard() {
+  const { user, balance, setBalance, logout } = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
   const [vehicle_no, setVehicle_no] = useState("");
-  const navigate = useNavigation();
+  const navigation = useNavigation();
 
   const getBalance = useCallback(() => {
     _get(
@@ -40,7 +41,6 @@ export default function DashBoard({ navigation }) {
   useEffect(() => {
     _get(`vehicles?query_type=select&owner_id=${user.account_id}`, (resp) => {
       if (resp.success && resp.data) {
-        // setData(resp.data);
         console.log(resp.data)
         setVehicle_no(resp.data[0].vehicle_count);
         console.log("hgzjhfgasjhghjsd", vehicle_no);
@@ -48,9 +48,18 @@ export default function DashBoard({ navigation }) {
     });
   }, []);
 
+  const handleLogout = () => {
+    logout();
+    navigation.navigate("index");
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerDashboard}>
+        {/* <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
+          <Ionicons name="log-out-outline" size={28} color="#fff" />
+          <Text style={styles.logoutButtonText}>Logout</Text>
+        </TouchableOpacity> */}
         <Text style={styles.headerText}>Welcome {user.name}</Text>
         <View style={styles.accountBalance}>
           <View style={{ flexDirection: "row", width: "50%" }}>
@@ -59,7 +68,6 @@ export default function DashBoard({ navigation }) {
                 style={{
                   width: "100%",
                   flexDirection: "row",
-                  // alignItems: 'center',
                   justifyContent: "center",
                 }}
               >
@@ -90,7 +98,6 @@ export default function DashBoard({ navigation }) {
               )}
             </View>
           </View>
-          {/* <View style={styles.button}> */}
           <View style={styles.accountBalanceText1}>
             <View
               style={{
@@ -131,19 +138,6 @@ export default function DashBoard({ navigation }) {
               <Text style={styles.CardText}>My Transaction</Text>
             </Link>
           </View>
-          {/* <View style={styles.cards}>
-            <Link as={TouchableOpacity} href={"/TopupWallet"}>
-              <AntDesign
-                name="creditcard"
-                style={styles.icon}
-                size={80}
-                color="#f5c005"
-              />
-            </Link>
-            <Link as={TouchableOpacity} href={"/TopupWallet"}>
-              <Text style={styles.CardText}>Top Up</Text>
-            </Link>
-          </View> */}
           <View style={styles.cards}>
             <Link as={TouchableOpacity} href={"/collectionTable"}>
               <FontAwesome
@@ -158,50 +152,10 @@ export default function DashBoard({ navigation }) {
             </Link>
           </View>
         </View>
-        {/* <View style={{ flexDirection: "row", width: "100%" }}>
-          <View style={styles.cards}>
-            <Link as={TouchableOpacity} href={"/collectionTable"}>
-              <FontAwesome
-                style={styles.icon}
-                name="truck"
-                size={80}
-                color="#f5c005"
-              />
-            </Link>
-            <Link as={TouchableOpacity} href={"/collectionTable"}>
-              <Text style={styles.CardText}>My Vehicle</Text>
-            </Link>
-          </View>
-          <View style={styles.cards}>
-            <Link as={TouchableOpacity} href={"/collectionTable"}>
-              <AntDesign
-                name="bank"
-                style={styles.icon}
-                size={80}
-                color="#f5c005"
-              />
-            </Link>
-            <Link as={TouchableOpacity} href={"/searchVehicles"}>
-              <Text style={styles.CardText}>Fund Vehicle</Text>
-            </Link>
-          </View>
-        </View> */}
         <View style={{ flexDirection: "row", width: "100%" }}>
-          {/* <View style={styles.cards}>
-            <Link as={TouchableOpacity} href={"/collectionTable"}>
-              <FontAwesome
-                style={styles.icon}
-                name="car"
-                size={80}
-                color="#f5c005"
-              />
-            </Link>
-            <Link as={TouchableOpacity} href={"/collectionTable"}>
-              <Text style={styles.CardText}>Search Vehicle</Text>
-            </Link>
-          </View> */}
         </View>
       </View>
+      <CustomNavBar />
     </SafeAreaView>
   );
 }
@@ -275,7 +229,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "500",
     color: "#FFF",
-    // fontStyle: 'italic',
     textAlign: "center",
     fontWeight: "900",
   },
@@ -294,5 +247,22 @@ const styles = StyleSheet.create({
     marginTop: 14,
     height: 35,
     flexDirection: "row",
+  },
+  logoutButton: {
+    marginTop: 20,
+    backgroundColor: "#000",
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 10,
+    width: "30%",
+    marginLeft: "auto",
+    marginRight: 10,
+    flexDirection: "row",
+
+  },
+  logoutButtonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });

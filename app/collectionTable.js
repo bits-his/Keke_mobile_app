@@ -21,13 +21,18 @@ export default function collectionTable() {
 
 
     useEffect(() => {
-        _get(`vehicles?query_type=select&owner_id=${user.account_id}`, (resp) => {
-            if (resp.success && resp.data) {
-                setData(resp.data);
-                console.log(resp.data)
-                //    setVehicleCount(resp.data[0].vehicle_count);
+        _get(`vehicles?query_type=select&owner_id=${user.account_id}`,
+            (resp) => {
+                if (resp.success && resp.data) {
+                    setData(resp.data);
+                    console.log(resp.data)
+                    //    setVehicleCount(resp.data[0].vehicle_count);
+                }
+            },
+            (err) => {
+                console.log(err)
             }
-        });
+        );
     }, []);
     const filterData = data.filter(item => item.vehicle_id.toLowerCase().includes(search.toLowerCase()) || item.plate_no.toLowerCase().includes(search.toLowerCase()))
 
@@ -45,7 +50,7 @@ export default function collectionTable() {
             <Text style={styles.tableCell}>{item.vehicle_id}</Text>
             <Text style={styles.tableCell}>{item.plate_no}</Text>
             <Text style={styles.tableCell}>{item.balance}</Text>
-            <TouchableOpacity style={styles.button1} onPress={() => navigation.navigate("TopupWallet" ,{vehicle_id:item.vehicle_id,plate_no:item.plate_no})}>
+            <TouchableOpacity style={styles.button1} onPress={() => navigation.navigate("TopupWallet", { vehicle_id: item.vehicle_id, plate_no: item.plate_no })}>
                 <Text style={styles.buttonText}>Top Up</Text>
             </TouchableOpacity>
         </View>
